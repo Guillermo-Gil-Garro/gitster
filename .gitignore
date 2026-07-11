@@ -1,0 +1,46 @@
+# Secrets & credentials
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+.cache
+spotify_token_cache
+
+# Real (personal) pipeline config — only the example is tracked
+pipeline/config/config.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+
+# Pipeline artifacts
+pipeline/runs/
+pipeline/data/
+
+# Android / Gradle
+app/**/build/
+app/.gradle/
+app/local.properties
+app/captures/
+*.apk
+*.aab
+!app/app/libs/*.aar
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+Thumbs.db
+desktop.ini
+*.bak
+
+# Logs
+*.log
+logcat*.txt
