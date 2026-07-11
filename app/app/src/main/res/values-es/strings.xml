@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Gitster</string>
+
+    <!-- Home -->
+    <string name="home_play_now">JUGAR AHORA</string>
+    <string name="home_rules">REGLAS</string>
+    <string name="home_scan_me">SCAN ME!</string>
+    <string name="home_qr_content_description">QR</string>
+    <string name="error_open_link">No puedo abrir el enlace</string>
+
+    <!-- Scan / resolution flow -->
+    <string name="loading_resolving">Cargando / resolviendo…</string>
+    <string name="scan_card_not_found">No encontrada</string>
+    <string name="scan_resolve_error">Error resolviendo</string>
+    <string name="scan_camera_permission">Se necesita permiso de cámara</string>
+    <string name="scan_exit">Salir</string>
+    <string name="scan_instruction">Apunta al QR dentro del marco</string>
+
+    <!-- Playback -->
+    <string name="playback_title">Reproducción</string>
+    <string name="playback_status_connecting">Conectando a Spotify...</string>
+    <string name="playback_status_starting">Iniciando reproducción...</string>
+    <string name="playback_status_retrying">Reintentando reproducción...</string>
+    <string name="playback_status_playing">Reproduciendo...</string>
+    <string name="playback_status_paused">Pausado...</string>
+    <string name="playback_status_paused_limit">Pausado: límite de tiempo alcanzado</string>
+    <string name="playback_status_auth_required">Inicia sesión en Spotify...</string>
+    <string name="playback_status_no_device">No hay dispositivo activo. Abre Spotify una vez y vuelve.</string>
+    <string name="playback_status_invalid_track">No se pudo resolver el track de Spotify.</string>
+    <string name="playback_status_no_activity">No se pudo obtener Activity para Spotify.</string>
+    <string name="playback_status_time_up">Tiempo agotado.</string>
+    <string name="playback_time_up_toast">Tiempo agotado (60s). Pausado.</string>
+    <string name="playback_error_network">Error de red. Revisa tu conexión.</string>
+    <string name="playback_error_premium">Se necesita Spotify Premium.</string>
+    <string name="playback_error_spotify">Error Spotify: %1$s</string>
+    <string name="playback_error_detail_unknown">desconocido</string>
+    <string name="playback_time_remaining">Tiempo restante: %1$s</string>
+    <string name="playback_pause">Pausar</string>
+    <string name="playback_resume">Reanudar</string>
+    <string name="playback_replay">Replay</string>
+    <string name="playback_seek_10">+10s</string>
+    <string name="playback_seek_30">+30s</string>
+    <string name="playback_next">Siguiente</string>
+    <string name="playback_open_spotify">Abrir Spotify</string>
+    <string name="playback_cant_open_spotify">No puedo abrir Spotify</string>
+</resources>
