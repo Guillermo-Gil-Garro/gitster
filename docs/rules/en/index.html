@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>GITSTER</title>
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#060814" />
+
+  <!--
+    ASSETS (required)
+    Inside `docs/assets/` (at the same level as this `index.html`) put:
+      - gitster_bg.png    (background)
+      - gitster_hero.png  (hero: <strong>Title</strong> + sub<strong>Title</strong>)
+
+    Note: if your phone caches the old image, change the `?v=1` to `?v=2` in this HTML.
+  -->
+
+  <style>
+    :root{
+      --bg0:#060814;
+      --bg1:#070b1c;
+
+      --ink:#eef2ff;
+      --muted:#b8c0e6;
+
+      --cyan:#22d3ee;
+      --mag:#ff2bd6;
+
+      --vio:#a78bfa;
+      --amber:#f59e0b;
+      --lime:#a3e635;
+      --rose:#fb7185;
+
+      --panel:#0a0f26cc;
+      --panel2:#0a102ad9;
+
+      --radius2:22px;
+      --shadow: 0 18px 40px rgba(0,0,0,.55);
+      --glowC: 0 0 18px rgba(34,211,238,.35), 0 0 42px rgba(34,211,238,.18);
+      --glowM: 0 0 18px rgba(255,43,214,.35), 0 0 42px rgba(255,43,214,.18);
+      --glowV: 0 0 18px rgba(167,139,250,.33), 0 0 42px rgba(167,139,250,.16);
+      --glowA: 0 0 18px rgba(245,158,11,.25), 0 0 42px rgba(245,158,11,.12);
+      --glowL: 0 0 18px rgba(163,230,53,.20), 0 0 42px rgba(163,230,53,.10);
+      --glowR: 0 0 18px rgba(251,113,133,.25), 0 0 42px rgba(251,113,133,.12);
+
+      --max: 980px;
+}
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--bg0), var(--bg1) 45%, #040612 100%);
+      overflow-x:hidden;
+    }
+
+    /* Background (Image A) */
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      background:
+        radial-gradient(1200px 700px at 50% 10%, rgba(124,58,237,.18), transparent 60%),
+        radial-gradient(900px 700px at 70% 55%, rgba(255,43,214,.10), transparent 62%),
+        radial-gradient(900px 700px at 25% 75%, rgba(34,211,238,.09), transparent 62%),
+        url("../assets/gitster_bg.png?v=1");
+      background-size: auto, auto, auto, cover;
+      background-position: center, center, center, center;
+      background-repeat:no-repeat;
+      filter: saturate(1.05) contrast(1.02);
+      transform: translateZ(0);
+    }
+    .bg::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background: linear-gradient(180deg, rgba(2,4,14,.70), rgba(2,4,14,.26) 42%, rgba(2,4,14,.78) 100%);
+    }
+    .bg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.14;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(900px 600px at 50% 25%, rgba(0,0,0,1), rgba(0,0,0,.35) 55%, rgba(0,0,0,.08) 85%, transparent 100%);
+    }
+
+    .scanlines{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      opacity:.07;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.10) 0px,
+        rgba(255,255,255,.10) 1px,
+        transparent 2px,
+        transparent 6px
+      );
+      mix-blend-mode: overlay;
+    }
+
+    .skip{
+      position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+    }
+    .skip:focus{
+      left:12px; top:12px; width:auto; height:auto; padding:10px 12px;
+      z-index:9999;
+      border-radius:12px;
+      background:#0b122b;
+      border:1px solid rgba(34,211,238,.45);
+      box-shadow:var(--glowC);
+      color:var(--ink);
+      text-decoration:none;
+    }
+    .sr-only{
+      position:absolute !important;
+      width:1px; height:1px;
+      padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0);
+      white-space:nowrap; border:0;
+    }
+
+    .top-bars{
+      position:sticky;
+      top:0;
+      z-index:20;
+      height:14px;
+      background: linear-gradient(90deg, transparent, rgba(255,43,214,.9), rgba(255,43,214,.95), rgba(255,43,214,.9), transparent);
+      filter: drop-shadow(0 6px 18px rgba(255,43,214,.25));
+    }
+    .top-bars::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:-4px;
+      height:6px;
+      background: linear-gradient(90deg, transparent, rgba(34,211,238,.85), rgba(34,211,238,.95), rgba(34,211,238,.85), transparent);
+      filter: drop-shadow(0 6px 16px rgba(34,211,238,.18));
+    }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 6px 16px 90px; /* << more compact, keeps content close to the hero */
+    }
+
+        /* HERO (combined image: <strong>Title</strong> + sub<strong>Title</strong>) */
+    .hero{
+      padding: 22px 0 12px;
+    }
+    .hero-inner{
+      width:min(var(--max), calc(100% - 28px));
+      margin:0 auto;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
+      padding: clamp(14px, 3.2vw, 24px);
+      text-align:center;
+    }
+    .hero-img{
+      width: min(860px, 100%);
+      height: auto;
+      display:block;
+      margin: 0 auto;
+      filter: drop-shadow(0 18px 34px rgba(0,0,0,.55));
+    }
+
+    /* Big CTA to CHEATSHEET */
+    .top-cta{
+      width:min(var(--max), calc(100% - 28px));
+      margin: 10px auto 18px;
+    }
+    .cheat-cta{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      width:100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      text-decoration:none;
+      font-weight: 900;
+      font-size: clamp(20px, 5.5vw, 34px);
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+      background: linear-gradient(90deg, rgba(200,90,255,.26), rgba(90,210,255,.20));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cheat-cta:active{transform: translateY(1px)}
+    .cheat-cta:focus-visible{outline:3px solid rgba(90,210,255,.55); outline-offset:3px}
+
+
+    .accordion{
+      display:grid;
+      gap: 14px;
+      margin-top: 10px; /* << stuck to the hero */
+    }
+
+    details.panel{
+      border-radius: var(--radius2);
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    details.panel::before{ content:none; }
+    @supports ((-webkit-mask-composite: xor) or (mask-composite: exclude)) {
+      details.panel::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(90deg, rgba(255,43,214,.75), rgba(34,211,238,.65));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity:.65;
+      }
+    }
+
+    details.panel.featured{
+      box-shadow: var(--shadow), var(--glowM), var(--glowC);
+      background: var(--panel2);
+    }
+    @supports ((-webkit-mask-composite: xor) or (mask-composite: exclude)) {
+      details.panel.featured::before{
+        opacity:.95;
+        background: linear-gradient(90deg, rgba(255,43,214,.95), rgba(34,211,238,.85));
+      }
+    }
+
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding: 18px 18px;
+      user-select:none;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      position:relative;
+      outline:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    summary::-webkit-details-marker{display:none}
+
+    .sum-title{
+      font-weight: 900;
+      letter-spacing: .03em;
+      font-size: clamp(18px, 2.2vw, 22px);
+    }
+    .sum-title .kicker{
+      color: rgba(34,211,238,.95);
+      text-shadow: 0 0 12px rgba(34,211,238,.22);
+    }
+    details.featured .sum-title .kicker{
+      color: rgba(255,43,214,.95);
+      text-shadow: 0 0 14px rgba(255,43,214,.22);
+    }
+
+    .caret{
+      margin-left:auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: inset 0 0 0 1px rgba(34,211,238,.10);
+      transition: transform .25s ease, box-shadow .25s ease;
+      flex: 0 0 auto;
+    }
+    details.is-open .caret{
+      transform: rotate(180deg);
+      box-shadow: inset 0 0 0 1px rgba(255,43,214,.18), 0 0 18px rgba(34,211,238,.18);
+    }
+
+    summary:focus-visible{
+      box-shadow: 0 0 0 3px rgba(34,211,238,.35), 0 0 0 1px rgba(34,211,238,.55) inset;
+      border-radius: 16px;
+    }
+
+    /* JS-controlled accordion content (robust on iPhone/WebViews) */
+    .panel__content{
+      padding: 0 18px;
+      color: rgba(238,242,255,.96);
+      overflow:hidden;
+      max-height: 0px;
+      transition: max-height .28s ease;
+    }
+    details.is-open .panel__content{
+      padding-bottom: 18px;
+    }
+
+    .panel__content p{margin: 10px 0}
+    .panel__content ul{margin: 10px 0 0; padding-left: 20px}
+    .panel__content li{margin: 6px 0}
+    .panel__content strong{color: #ffffff}
+
+    .lead{color: rgba(238,242,255,.94); margin-top: 8px;}
+    .mono{font-variant-numeric: tabular-nums}
+    .muted{color: var(--muted)}
+
+    /* Pill-style badges (for labels like TIE, LIMIT, etc.) */
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: inset 0 0 0 1px rgba(34,211,238,.10);
+      white-space: nowrap;
+    }
+    .tag.mag{
+      border-color: rgba(255,43,214,.40);
+      box-shadow: inset 0 0 0 1px rgba(255,43,214,.16);
+    }
+
+    /* FUCK section <strong>Title</strong> in fuchsia */
+    details#fuck .sum-title .kicker{
+      color: rgba(255,43,214,.95);
+      text-shadow: 0 0 14px rgba(255,43,214,.22);
+    }
+
+    .callout{
+      margin: 14px 0 10px;
+      padding: 14px 14px;
+      border-radius: 16px;
+      background: rgba(8,12,32,.55);
+      border: 2px solid rgba(34,211,238,.60);
+      box-shadow: var(--glowC);
+    }
+    .callout.mag{ border-color: rgba(255,43,214,.70); box-shadow: var(--glowM); }
+    .callout.violet{ border-color: rgba(167,139,250,.75); box-shadow: var(--glowV); }
+    .callout.amber{ border-color: rgba(245,158,11,.70); box-shadow: var(--glowA); }
+    .callout.lime{ border-color: rgba(163,230,53,.70); box-shadow: var(--glowL); }
+    .callout.rose{ border-color: rgba(251,113,133,.75); box-shadow: var(--glowR); }
+    .callout h4{
+      margin:0 0 6px;
+      letter-spacing:.02em;
+    }
+
+    /* FAQ: question a bit bigger, but smaller than section <strong>Title</strong> */
+    .faq h4{
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .big-reminder{
+      margin: 16px 0 6px;
+      text-align:center;
+      font-weight: 1000;
+      letter-spacing:.06em;
+      text-transform: uppercase;
+      font-size: clamp(20px, 2.8vw, 28px);
+      background: linear-gradient(90deg, rgba(255,43,214,.95), rgba(34,211,238,.95));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow: 0 0 18px rgba(255,43,214,.20), 0 0 22px rgba(34,211,238,.16);
+      padding: 6px 0 0;
+    }
+
+    .fab{
+      position:fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 50;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(220px 140px at 20% 20%, rgba(255,43,214,.35), transparent 65%),
+        radial-gradient(220px 140px at 80% 80%, rgba(34,211,238,.28), transparent 65%),
+        rgba(10,16,42,.80);
+      color: var(--ink);
+      padding: 12px 14px;
+      font-weight: 900;
+      letter-spacing:.02em;
+      cursor:pointer;
+      box-shadow: var(--shadow), 0 0 22px rgba(255,43,214,.20), 0 0 22px rgba(34,211,238,.16);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fab:focus-visible{
+      outline: none;
+      box-shadow: var(--shadow), 0 0 0 3px rgba(34,211,238,.35), 0 0 0 1px rgba(34,211,238,.55) inset;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      .caret, .fab, .panel__content{transition:none !important}
+    }
+    .subtle{opacity:.78; font-size:.95em;}
+  /* Spacing for action bullets in DJ'S TURN */
+  #sec-3 .content-inner ul{margin:0 0 .85rem 0;}
+  #sec-3 .content-inner ul li{margin:.85rem 0;}
+</style>
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <a class="skip" href="#contenido">Skip to content</a>
+  <div class="top-bars" aria-hidden="true"></div>
+
+  <header class="hero">
+  <div class="hero-inner">
+    <h1 class="sr-only">GITSTER — cooler, groovier, and with way more gambling!</h1>
+    <img class="hero-img" src="../assets/gitster_hero.png?v=1" alt="GITSTER — cooler, groovier, and with way more gambling!" loading="eager" decoding="async" />
+  </div>
+</header>
+
+  <main id="contenido" class="wrap">
+
+  <div class="top-cta">
+    <a class="cheat-cta" href="#cheatsheet" aria-label="Go to the Cheatsheet">Go to Cheatsheet <span aria-hidden="true">🧠</span></a>
+  </div>
+
+    <section class="accordion" aria-label="GITSTER rules (accordions)">
+
+
+
+      <details class="panel" id="que-es">
+        <summary aria-label="Open section WHAT IS THIS?">
+          <span class="sum-title"><span class="kicker">WHAT IS THIS? 🪩</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p class="lead">
+              <strong>GITSTER</strong> is a spin on the famous put-the-songs-in-chronological-order game, but here the <strong>tokens</strong>
+              set the beat way more 🕺<br/>
+              In this version, <strong>bets</strong> and card <strong>steals</strong> aren't just forgettable featurings,
+              they're the headliner! 💃
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="necesitas">
+        <summary aria-label="Open section WHAT DO YOU NEED TO PLAY?">
+          <span class="sum-title"><span class="kicker">WHAT DO YOU NEED TO PLAY? 🧰</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <ul>
+              <li><strong>The base game</strong> (cards + tokens) 🧩</li>
+              <li><strong>A phone with the apps</strong> (<del>H</del>Gitster and Spotify) 🎶</li>
+              <li><strong>A speaker</strong> (optional but recommended) 🔊</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="sec-1">
+        <summary aria-label="Open section 1) GOAL">
+          <span class="sum-title"><span class="kicker">1) GOAL 🎯</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p>Build your <strong>Timeline</strong> by placing songs in <strong>CHRONOLOGICAL ORDER</strong> (before/after) ⌛</p>
+            <p>Whoever ends the game with <strong>12</strong> cards in their Timeline wins 🏁</p>
+            <p class="muted">(The <strong>Exact Year</strong> is <strong>NOT</strong> needed to place cards; it's only good for <strong>winning tokens</strong>)</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="sec-2">
+        <summary aria-label="Open section 2) SETUP">
+          <span class="sum-title"><span class="kicker">2) SETUP 📋</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <ul>
+              <li>Place the deck in the middle <br/>
+                Each player starts with <strong>1 starting card</strong> in their Timeline <span class="muted">(face up)</span> 🃏</li>
+              <li><strong>Who's the first DJ?</strong> 🎧🎛️<br/>
+                <span class="muted">(The DJ is the player the song is playing for)</span> <br/>
+                Look at the year on your starting Timeline card <br/>
+                The player with the <strong>OLDEST</strong> song goes first 📻
+              </li>
+            </ul>
+
+            <div class="callout mag" role="note" aria-label="TIE note in setup">
+              <p><strong style="color: rgba(255,43,214,.95)">TIE</strong> – Tied players draw an extra card <span class="muted">(it doesn't count for the Timeline, it gets discarded)</span><br/>Whoever gets the <strong>MOST RECENT</strong> song wins ✨</p>
+            </div>
+
+            <ul>
+              <li>Every player receives <br/><strong>3 betting tokens</strong> 🪙🪙🪙</li>
+            </ul>
+
+            <div class="callout" role="note" aria-label="LIMIT note">
+              <p><strong style="color: rgba(34,211,238,.95)">TOKEN LIMIT</strong><br/> <strong>YOU&nbsp;CANNOT&nbsp;HOARD MORE THAN 10 TOKENS!</strong> ⚠️<br/>
+                <span class="muted">You'll soon see that in GITSTER you rack up tokens way faster than usual, so dare to bet and let your inner gambling addict run wild!</span> 🤑
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="sec-3">
+        <summary aria-label="Open section 3) DJ'S TURN">
+          <span class="sum-title"><span class="kicker">3) DJ'S TURN 🎤</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p>The DJ takes a card from the deck (face down), scans the song and decides what to do:</p>
+
+            <ul>
+              <li><strong>&nbsp;PLAY IT NORMAL</strong> 🎵<br/>Listen to the song, place it<br/><strong>FACE DOWN</strong> in the Timeline, 🕒<br/>and try to guess the <strong><strong>Title</strong></strong>, <strong>Artist(s)</strong> and <strong>Exact Year</strong> 🎵🎤📆</li>
+            </ul>
+
+            <div class="callout mag" role="note" aria-label="RHYTHM note">
+              <p><strong style="color: rgba(255,43,214,.95)">RHYTHM</strong> – You can listen to the song <strong>UP TO THE CHORUS</strong> (included), no listening to the whole thing ⏱️<br/><span class="muted">If there's no chorus, max<br/><strong>1 minute</strong></span> ⏳</p>
+            </div>
+
+            <ul>
+              <li><strong>&nbsp;RE-ROLL</strong> 🎲<br/>The DJ can pay tokens to <strong>discard</strong> the scanned card and take a new card from the deck 🤞</li>
+              <p>Cost per turn (cumulative):<br/>the first re-roll of the turn costs<br/><strong>1 token</strong>, the second <strong>2</strong>, the third <strong>3</strong>;<br/>and so on 📈</p>
+              <li><strong>&nbsp;BUY THE CARD</strong> 💸<br/>By paying <strong>3 tokens</strong>, the DJ can flip the card over and place it in the right spot of their Timeline 🧐</li>
+              <p>On that turn, there will be <strong>NO</strong><br/><strong>BETTING ROUND</strong> 🚫</p>
+            </ul>
+
+            <div class="callout" role="note" aria-label="LAW OF ADVANTAGE note">
+              <p><strong style="color: rgba(34,211,238,.95)">LAW OF ADVANTAGE</strong> – The player(s) with the most cards <strong>CANNOT BUY CARDS</strong> (but they CAN <strong>RE-ROLL</strong> or <strong>EXPROPRIATE A CARD</strong>) ⚖️</p>
+            </div>
+            <ul>
+              <li><strong>&nbsp;EXPROPRIATE A CARD</strong> 🫳<br/>By paying <strong>10 tokens</strong>, the DJ can discard the scanned card and steal a card from another player's Timeline (placing it in the right spot of their own Timeline) 🦹‍♂️</li>
+              <p><span class="muted">CAREFUL! Spending 10 tokens leaves you at 0, so you can't bet and, therefore, it'll take you at least one round to start winning tokens again 😱</span></p>
+              <p>On that turn, there will be <strong>NO</strong><br/><strong>BETTING ROUND</strong> 🚫</p>
+            </ul>
+            </div>
+        </div>
+      </details>
+
+      <details class="panel" id="sec-4">
+        <summary aria-label="Open section 4) BETTING ROUND">
+          <span class="sum-title"><span class="kicker">4) BETTING ROUND<br/>🎰🎰🎰🎰🎰🎰🎰🎰🎰🎰</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p><span class="muted">No more fighting over who said GITSTER first, who shouted the loudest, who gets to be goalkeeper because the ball is theirs and if we don't let them they'll go home and take it with them and blah, blah, blah!</span></p>
+            <p><span class="muted">Here we're <del>gambling addicts</del> civilized players and, as such, we follow an order</span> 🫡</p>
+
+            <p>The betting round starts with the player to the DJ's right ➡️</p>
+            <p>Going <strong>COUNTERCLOCKWISE</strong> (to the right), players can decide to:</p>
+
+
+            <ul>
+              <li><strong>BET 1 token</strong> on <strong>ONLY ONE</strong> of the following categories:<br/><strong><strong>Chronological Order</strong></strong>, <strong><strong>Title</strong></strong>, <strong><strong>Artist</strong>(s)</strong> OR <strong><strong>Exact Year</strong></strong> 🕒🎵🎤📆</li>
+            </ul>
+
+            <div class="callout mag" role="note" aria-label="NO REPEATS note">
+              <p><strong style="color: rgba(255,43,214,.95)">NO REPEATS</strong> – If a player before you (DJ included) has already bet on a Timeline Zone (<strong>Chronological Order</strong>) you wanted to bet on, or has said a <strong>Title</strong>, <strong>Artist(s)</strong> or <strong>Exact Year</strong> you wanted to bet on; you pass or bet on something else 🤷‍♂️</p>
+              <p>In short: <strong>TOUGH LUCK, KEEP DANCING</strong> <span class="muted">(quite literally)</span> 🕺</p>
+            </div>
+
+            <div class="callout" role="note" aria-label="VARIOUS ARTISTS note">
+              <p><strong style="color: rgba(34,211,238,.95)">VARIOUS ARTISTS</strong> – When betting on <strong>Artist(s)</strong>, you can name one or several (to steal token-winning chances from the players who go after you) 🖕; but if you name several artists <strong>AND GET AT LEAST ONE WRONG, YOU LOSE THE BET</strong> ☠️</p>
+              <p><span class="muted">If you get them ALL right, you collect ONLY ONCE:</span></p>
+              <ul>
+                <li><strong>+1</strong> <span class="muted">if you only named<br/>main Artist(s)</span></li>
+                <li><strong>+2</strong> <span class="muted">if you named at least one<br/>NON-main Artist (feat)</span></li>
+              </ul>
+              <p><span class="muted">(see <strong>Bet Payouts</strong>)</span></p>
+            </div>
+
+            <div class="callout mag" role="note" aria-label="LAW OF ADVANTAGE II note, this time it's personal">
+              <p><strong style="color: rgba(255,43,214,.95)">LAW OF ADVANTAGE II, this time it's personal</strong> – The player(s) with the most cards <strong>ALSO CANNOT BET ON CHRONOLOGICAL ORDER</strong>, but they CAN <strong>SCREW THE DJ</strong> ⚖️</p>
+            </div>
+
+            <ul>
+              <li><strong>SCREW THE DJ</strong>, paying <strong>5 tokens</strong> so the DJ <strong>CANNOT win</strong> that card 😈
+                <ul>
+                  <li><span class="muted">If the DJ gets it right, the card is discarded</span></li>
+                  <li><span class="muted">If the DJ gets it wrong, it's resolved as normal<br/>(a player who bet on Chronological Order can take it)</span></li>
+                </ul>
+                <p><span class="muted">The screwing is decided when betting, but it's executed after revealing and after collecting/paying</span></p>
+              </li>
+              <li><strong>PASS</strong> 🤷‍♀️</li>
+            </ul>
+
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="sec-5">
+        <summary aria-label="Open section 5) TURN RESOLUTION AND BET PAYOUTS">
+          <span class="sum-title"><span class="kicker">5) TURN RESOLUTION AND BET PAYOUTS 💵</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p>Once every non-DJ player has bet, the card can be flipped over:</p>
+            <ul>
+              <li>If the DJ placed it right in their Timeline, they keep it 👍 <span class="muted">(unless someone <strong>Screwed</strong> them, in which case it's discarded)</span></li>
+              <li>Otherwise, it's discarded, <strong>unless</strong> someone bet on <strong><strong>Chronological Order</strong></strong> and got it right, in which case they place it in the right spot of their own Timeline 🎉</li>
+            </ul>
+
+            <p>Next, following the betting order (and starting with the DJ), the corresponding tokens are collected/paid:</p>
+
+            <ul>
+              <li>For the DJ, <strong>as long as they placed the card right in their Timeline</strong> (otherwise, they collect NOTHING):
+                <ul>
+                  <li><strong>Title</strong>: <strong>+1</strong> 🙂</li>
+                  <li><strong>Artist(s)</strong> (doesn't matter if one or several, main or not): <strong>+1</strong> 😊</li>
+                  <li><strong>Exact Year</strong>: <strong>+1</strong> 😄</li>
+                  <li> They can win at most<br/><strong>+3 tokens</strong> 😁🤩🥳</li>
+                </ul>
+              </li>
+              <li>For the rest of the players (bets against the house):
+                <ul>
+                  <li><strong><strong>Title</strong></strong>: <strong>+1</strong> 🙂</li>
+                  <li><strong>Main <strong>Artist</strong></strong>: <strong>+1</strong> 😊</li>
+                  <li><strong>NON-main <strong>Artist</strong></strong>: <strong>+2</strong> 😄😁</li>
+                  <li><strong><strong>Exact Year</strong></strong>: <strong>+2</strong> 🤩🥳</li>
+                  <li>If you lost your bet, you leave<br/><strong>1 token</strong> in the box (<strong>-1</strong>) 😭</li>
+                  <li>If you passed (didn't bet), you're a chicken and you stay as you are 💩</li>
+                </ul>
+              </li>
+            </ul>
+
+<div class="callout" role="note" aria-label="TITLE-ITIS note">
+              <p><strong style="color: rgba(34,211,238,.95)">TITLE-ITIS</strong> – For a <strong>Title</strong> bet to count, you have to say it <strong>(almost) PERFECTLY</strong>, with its articles, its tiny little words and all ☝️🤓<br/>The only thing you're allowed to skip are the "subtitles" in parentheses<br/>E.g.: For <strong>Blue (Da Ba Dee)</strong>,<br/>by Eiffel 65, <strong>"Blue"</strong> is enough<br/><span class="muted">(but who on earth says just "Blue" for Blue (Da Ba Dee)?!)</span> </p>
+            </div>
+
+            <div class="callout mag" role="note" aria-label="MAIN <strong>Artist</strong>S note">
+              <p><strong style="color: rgba(255,43,214,.95)">MAIN ARTIST OR FEAT?</strong> <br/>A song can have <strong>one or several</strong> main artists (E.g.: the Bizarrap Sessions)<br/>“NON-main artist” = guest artist, feat, extra, etc. (however you interpret it at the table, I wash my hands of it) 🙈🙉🙊</p>
+
+            </div>
+
+            <div class="big-reminder">REMEMBER THE MAXIMUM LIMIT OF 10 TOKENS!</div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="sec-6">
+        <summary aria-label="Open section 6) END OF THE GAME">
+          <span class="sum-title"><span class="kicker">6) END OF THE GAME 🏁</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p>When someone reaches <strong>12</strong> cards in their Timeline, the game does <strong>NOT</strong> end 🙅‍♂️</p>
+            <ul>
+              <li>It's checked and ends <strong>at the end of the round</strong>, when the turn comes back to the player who was the <strong>first DJ</strong> ↩️</li>
+              <li>If the leader is at <strong>12</strong>, <strong>13</strong>, or <strong>14 cards</strong>, they also need a <strong>lead</strong> of<br/><strong>≥ 2 cards</strong> over the next player with the most cards <br/><span class="muted">(12–10, 13–11 or 14–12)</span> 🎾</li>
+              <li>If at the end of the round someone has reached <strong>15 cards</strong>, they win <strong>NO MATTER WHAT</strong> 🏆<br/><span class="muted">(unless there's a tie at 15)</span> </li>
+            </ul>
+
+            <div class="callout mag" role="note" aria-label="TIE note">
+              <p><strong style="color: rgba(255,43,214,.95)">TIE AT 15</strong> – Whoever has the most tokens wins 🪙🪙🪙🪙🪙🪙🪙🪙</p>
+            </div>
+
+            <div class="callout" role="note" aria-label="TOKEN TIE note">
+              <p><strong style="color: rgba(34,211,238,.95)">TOKEN TIE</strong> 😵‍💫 – If the tie continues: <strong>SUDDEN DEATH</strong> ☠️<br/>
+                The tied players play <strong>1</strong> turn each (in the normal order) and the first one to get <strong>+1 card</strong> (<strong>WITHOUT BUYING</strong>) wins 👑<br/><span class="muted">If both get it in the same round, whoever ends with the most tokens wins</span> 🥇
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+<details id="cheatsheet" class="panel featured">
+        <summary aria-label="Open section CHEATSHEET">
+          <span class="sum-title"><span class="kicker">CHEATSHEET 🧠</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <ul>
+  <li>Whoever has the oldest starting Timeline song goes first 📻</li>
+  <li>In bets, the player to the DJ's right always goes first ➡️</li>
+  <li>Starting tokens: <span class="mono">3</span> 🪙🪙🪙</li>
+  <li>Token limit: <span class="mono">10</span> ⚠️</li>
+  <li>You can listen to the song up to the chorus (included)<br/><span class="muted">If there's no chorus: 1 minute</span> ⏳</li>
+  <li>Re-roll: 1st costs <span class="mono">1</span>, 2nd costs <span class="mono">2</span>, 3rd costs <span class="mono">3</span>… (in the same turn) 🎲</li>
+  <li>Buy a card: costs <span class="mono">3</span> tokens <strong>AND ONLY IF YOU'RE NOT IN THE LEAD</strong> 💸</li>
+  <li>Bets in order and COUNTERCLOCKWISE (to the right): <strong>1 token, 1 category, and no repeating picks</strong> 🚫<br/><span class="muted"> If you're winning or tied for the lead, you CANNOT BET on Chronological Order</span> ⚖️</li>
+  <li><strong>SCREW THE DJ</strong>: instead of betting, pay <span class="mono">5</span> tokens so the DJ <strong>CANNOT win</strong> that card 😈<br/><span class="muted">If the DJ gets the Timeline placement right, it's discarded<br/>If the DJ gets it wrong and someone bet on Chronological Order, they can take it</span></li>
+  <li><strong>EXPROPRIATE</strong>: on your turn, pay <span class="mono">10</span> tokens (you drop to 0), discard the scanned card and steal a card from another player's Timeline 🫳</li>
+  <li>If you get (at least) one artist wrong, you lose the <strong>Artist(s)</strong> bet ☠️</li>
+  <li>The DJ role rotates to the right when a turn ends ➡️</li>
+  <li>You win by reaching <span class="mono">12–14</span> cards in the Timeline with a <strong>lead ≥ 2</strong>,<br/>(at <strong>15 cards you win NO MATTER WHAT</strong>)<br/><strong>AT THE END OF THE ROUND</strong> ↩️</li>
+</ul>
+          </div>
+        </div>
+      </details>
+
+
+      <details class="panel" id="fuck">
+        <summary aria-label="Open section FUCK (Frequently Usked CKuestions)">
+          <span class="sum-title"><span class="kicker">FUCK (Frequently Usked CKuestions) 🙋‍♂️🤔🙋‍♀️</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner faq">
+
+
+            <div class="callout mag" role="note" aria-label="FAQ Players and teams">
+              <h4>How many players is it for? Can you play in teams?</h4>
+              <p>GITSTER is a game designed for <strong>4–7 players</strong> 🚶‍♂️🚶‍♀️🚶🚶‍♂️+🚶‍♀️🚶🚶‍♂️</p>
+              <p>But relax, Mister Sociable 😎 / Miss Popularity 👸, if you are<br/><strong>8 or more players, you can play</strong><br/><strong>in teams</strong>, though you'll have to agree on the Timeline and Betting decisions together 🤝</p>
+              <ul>
+                <li>8 players = 4 pairs 🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑</li>
+                <li>9 players = 3 trios 👪👪👪 or 3 pairs + 1 trio 🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑👪</li>
+                <li>10 players = 5 pairs 🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑</li>
+                <li>11 players = 3 trios + 1 pair 👪👪👪🧑‍🤝‍🧑</li>
+                <li>12 players = 4 trios 👪👪👪👪</li>
+              </ul>
+              <p><span class="muted">And we won't give you more examples because we think you've got it (and because we know nobody has more than 12 friends, don't flatter yourselves)</span></p>
+            </div>
+
+            <div class="callout" role="note" aria-label="FAQ Token limit excess">
+              <h4>📜 Why do the “Laws of Advantage” exist? (why nerf the player who's winning?)</h4>
+              <p>Most of the game's additional rules (the ones in fuchsia and blue boxes) are designed to <strong>balance the game and prevent exploits</strong> ⚙️</p>
+                <ul>
+                  <li>For example, the player(s) in the lead can't buy cards to <strong>prevent a SNOWBALL effect</strong> (the ones winning pulling even further ahead of the ones losing) 🦾⛄️</li>
+                  <li>Likewise, the leader(s) can't bet on chronological order because it's a simple fix for the fact that, with a "bad DJ", <strong>the player to their right always gets betting priority</strong> and could steal lots of cards <strong>betting on Chronological Order</strong>, which would give them too big an edge over the rest of the table just for knowing where to sit 💪💪</li>
+                </ul>
+              <p><span class="muted">In the end it's about giving everyone <strong>equal opportunities</strong> to make the game <strong>more competitive</strong> and, therefore, <strong>more fun</strong></span> 🤪</p>
+            </div>
+
+            <div class="callout violet" role="note" aria-label="FAQ Rewind and replay">
+              <h4>🎧 Can you rewind or replay the song?</h4>
+              <p>No. <strong>One single playback</strong> per turn, no going back 🙅‍♂️⏪</p>
+            </div>
+
+            <div class="callout rose" role="note" aria-label="FAQ Hints while listening">
+              <h4>🗣️ Can you talk during the listening or give hints?</h4>
+              <p>You can talk and trash-talk, but <strong>no direct hints</strong> 🤫<br/>You can <strong>NOT</strong> <strong>shout to screw people over</strong> and keep them from hearing the song 🤐</p>
+            </div>
+
+            <div class="callout amber" role="note" aria-label="FAQ Buy card">
+              <h4>💸 Buying the card (3 tokens)</h4>
+              <p><strong>When can I buy it?</strong> Whenever you want (no need to wait for the chorus) ⚡️</p>
+              <h4>🤔 If I buy, can I win tokens for Title/Artist/Exact Year?</h4>
+              <p>No: if you buy, you <strong>collect no tokens</strong> that turn 🙅‍♀️</p>
+            </div>
+
+            <div class="callout lime" role="note" aria-label="FAQ Re-roll after listening">
+              <h4>🎲 Can I re-roll even if I've already listened to the song?</h4>
+              <p>Yes, but try to keep the game moving 🥱</p>
+              <p>If you can tell <strong>you have no clue about the song</strong> from the start, re-roll fast, spending a token is no big deal <span class="muted">(and I doubt Our Lady of the Remix will suddenly appear to you and reveal what year the song is from)</span> 😂</p>
+            </div>
+
+            <div class="callout mag" role="note" aria-label="FAQ Disputes">
+              <h4>⚔️ Disputes (“almost perfect” title, main vs feat, etc.)</h4>
+              <p>Decided by a <strong>quick vote</strong> by show of hands<br/>(majority rules) 🙋‍♀️🗳️🙋‍♂️</p>
+              <p>If there's a <strong>tie</strong>: it counts as valid, but you collect <strong>+1</strong> (even if it would normally be +2) 🤷‍♂️</p>
+            </div>
+
+            <div class="callout" role="note" aria-label="FAQ No clear chorus">
+              <h4>⏱️ What if the song has no clear chorus?</h4>
+              <p>You listen for a max of <strong>1 minute</strong> (<del>someday</del> the app will cut it off automatically) ✋</p>
+            </div>
+
+            <div class="callout violet" role="note" aria-label="FAQ Token limit excess">
+              <h4>🔟 What if I'm at 10 tokens and I'm owed more?</h4>
+              <p>You stay at <strong>10</strong> 🥲<br/>The excess is lost 🙏<br/><span class="muted">In general, when in doubt, remember: <strong>TOUGH LUCK, KEEP DANCING</strong></span> 💃</p>
+            </div>
+
+          </div>
+        </div>
+      </details>
+
+    </section>
+  </main>
+
+  <a class="fab" id="cheatsheetFab" href="#cheatsheet" aria-label="Go to CHEATSHEET">Cheatsheet</a>
+
+  <script>
+(() => {
+  const panels = Array.from(document.querySelectorAll('details.panel'));
+  const DURATION = 280; // must match the CSS (transition)
+
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const smoothBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+
+  function getContent(d){
+    return d.querySelector('.panel__content');
+  }
+
+  function setExpanded(d, expanded){
+    const content = getContent(d);
+    if (!content) {
+      d.open = expanded;
+      d.classList.toggle('is-open', expanded);
+      return;
+    }
+
+    if (expanded) {
+      d.open = true;
+      d.classList.add('is-open');
+      // animation: 0 -> scrollHeight
+      content.style.maxHeight = content.scrollHeight + 'px';
+    } else {
+      // animation: scrollHeight -> 0
+      d.classList.remove('is-open');
+      content.style.maxHeight = content.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        content.style.maxHeight = '0px';
+      });
+      window.setTimeout(() => {
+        d.open = false;
+      }, prefersReducedMotion ? 0 : DURATION);
+    }
+  }
+
+  function closeOthers(current){
+    panels.forEach(p => {
+      if (p !== current && p.open) setExpanded(p, false);
+    });
+  }
+
+  // Init + click override (for animation + "only one open" mode)
+  panels.forEach(d => {
+    const summary = d.querySelector('summary');
+    const content = getContent(d);
+
+    // initial state
+    d.classList.toggle('is-open', d.open);
+    if (content) content.style.maxHeight = d.open ? (content.scrollHeight + 'px') : '0px';
+
+    summary?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const willOpen = !d.open;
+      if (willOpen) closeOthers(d);
+      setExpanded(d, willOpen);
+    });
+  });
+
+  // Recalculate heights on rotate / resize
+  window.addEventListener('resize', () => {
+    panels.forEach(d => {
+      if (!d.open) return;
+      const content = getContent(d);
+      if (content) content.style.maxHeight = content.scrollHeight + 'px';
+    });
+  });
+
+  // Jump + open Cheatsheet (big button + FAB)
+  function openCheatsheet(){
+    const cs = document.getElementById('cheatsheet');
+    if (!cs) return;
+    closeOthers(cs);
+    setExpanded(cs, true);
+    cs.scrollIntoView({ behavior: smoothBehavior, block: 'start' });
+    history.replaceState(null, '', '#cheatsheet');
+  }
+
+  document.querySelectorAll('a[href="#cheatsheet"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCheatsheet();
+    });
+  });
+
+  // If the page is opened with #cheatsheet in the URL, open it
+  if (location.hash === '#cheatsheet') {
+    // let it paint 1 frame before computing scrollHeight
+    requestAnimationFrame(openCheatsheet);
+  }
+})();
+</script>
+</body>
+</html>
