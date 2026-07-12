@@ -947,8 +947,9 @@ def render_deck_pdfs(
     if not back_bg_path.exists():
         raise FileNotFoundError(f"Back background image not found: {back_bg_path}")
 
-    deck_df = cards_df.fillna("")
-    deck_df = deck_df.sort_values("selection_rank", kind="stable").reset_index(drop=True)
+    # Caller-provided order is respected: with per-expansion numbering a global
+    # sort by selection_rank would interleave the expansions.
+    deck_df = cards_df.fillna("").reset_index(drop=True)
     cards = deck_df.to_dict(orient="records")
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -991,6 +992,11 @@ def main() -> None:
         raise FileNotFoundError(f"Input CSV not found: {input_csv_path}")
 
     cards_df = pd.read_csv(input_csv_path)
+    sort_columns = [
+        column for column in ("expansion_anchor", "selection_rank") if column in cards_df.columns
+    ]
+    if sort_columns:
+        cards_df = cards_df.sort_values(sort_columns, kind="stable")
     render_deck_pdfs(
         cards_df,
         out_dir=Path(args.out_dir),
