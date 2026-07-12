@@ -40,6 +40,11 @@ EDITABLE_REVIEW_COLUMNS = [
 
 REQUIRED_REVIEW_COLUMNS = ["song_id"] + EDITABLE_REVIEW_COLUMNS
 
+# Optional columns filled by an AI auditor; absent in older review templates.
+AI_REVIEW_COLUMNS = ["ai_year", "ai_note"]
+
+AI_NOTE_TAG = "[AI]"
+
 
 def _normalize_nullable_scalar(value):
     if value is None or pd.isna(value):
@@ -101,21 +106,44 @@ def _load_review_xlsx(review_xlsx: str | Path) -> pd.DataFrame:
     return review_df
 
 
+def _coerce_ai_year(value, *, song_id: str):
+    try:
+        return coerce_year_override(value, strict=True, song_id=song_id)
+    except ValueError:
+        raise ValueError(f"Invalid ai_year for song_id={song_id}: {value!r}") from None
+
+
+def _resolve_effective_year_and_note(row: dict, *, song_id: str) -> tuple[object, str | None]:
+    """Apply precedence year_override > ai_year; tag the note when the AI year is used."""
+    year_override = coerce_year_override(row.get("year_override"), strict=True, song_id=song_id)
+    note = normalize_string_override(row.get("note"))
+
+    if not pd.isna(year_override):
+        return year_override, note
+
+    ai_year = _coerce_ai_year(row.get("ai_year"), song_id=song_id)
+    if pd.isna(ai_year):
+        return year_override, note
+
+    ai_note = normalize_string_override(row.get("ai_note"))
+    tagged_note = f"{AI_NOTE_TAG} {ai_note}" if ai_note else AI_NOTE_TAG
+    if note:
+        tagged_note = f"{tagged_note} | {note}"
+    return ai_year, tagged_note
+
+
 def _build_review_state_df(review_df: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for row in review_df.to_dict(orient="records"):
         song_id = row["song_id"]
+        effective_year, effective_note = _resolve_effective_year_and_note(row, song_id=song_id)
         rows.append(
             {
                 "song_id": song_id,
-                "year_override": coerce_year_override(
-                    row.get("year_override"),
-                    strict=True,
-                    song_id=song_id,
-                ),
+                "year_override": effective_year,
                 "artists_display_override": normalize_string_override(row.get("artists_display_override")),
                 "title_display_override": normalize_string_override(row.get("title_display_override")),
-                "note": normalize_string_override(row.get("note")),
+                "note": effective_note,
             }
         )
 

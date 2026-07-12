@@ -101,17 +101,7 @@ def _xlsx_cell_xml(cell_ref: str, value) -> str:
     )
 
 
-def write_xlsx(
-    path: str | Path,
-    df: pd.DataFrame,
-    *,
-    sheet_name: str,
-    list_separator: str = " | ",
-) -> None:
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-
-    sheet_name = _sanitize_sheet_name(sheet_name)
+def _build_worksheet_xml(df: pd.DataFrame, *, list_separator: str) -> str:
     export_df = df.copy()
     for column in export_df.columns:
         serialized_values = [
@@ -150,7 +140,7 @@ def write_xlsx(
     last_col_letter = _excel_column_name(max(len(export_df.columns), 1))
     last_row = max(len(export_df) + 1, 1)
 
-    worksheet_xml = (
+    return (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
         'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
@@ -167,22 +157,55 @@ def write_xlsx(
         "</worksheet>"
     )
 
+
+def write_xlsx(
+    path: str | Path,
+    df: pd.DataFrame,
+    *,
+    sheet_name: str,
+    list_separator: str = " | ",
+    extra_sheets: list[tuple[str, pd.DataFrame]] | None = None,
+) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    sheets: list[tuple[str, pd.DataFrame]] = [(sheet_name, df)]
+    sheets.extend(extra_sheets or [])
+
+    sheet_names: list[str] = []
+    for raw_name, _sheet_df in sheets:
+        cleaned_name = _sanitize_sheet_name(raw_name)
+        if cleaned_name in sheet_names:
+            raise ValueError(f"Duplicate sheet name after sanitizing: {cleaned_name!r}")
+        sheet_names.append(cleaned_name)
+
+    worksheet_xmls = [
+        _build_worksheet_xml(sheet_df, list_separator=list_separator)
+        for _raw_name, sheet_df in sheets
+    ]
+
+    sheet_entries_xml = "".join(
+        f'<sheet name="{escape(name)}" sheetId="{sheet_idx}" r:id="rId{sheet_idx}"/>'
+        for sheet_idx, name in enumerate(sheet_names, start=1)
+    )
     workbook_xml = (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
         'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-        '<sheets>'
-        f'<sheet name="{escape(sheet_name)}" sheetId="1" r:id="rId1"/>'
-        "</sheets>"
+        f"<sheets>{sheet_entries_xml}</sheets>"
         "</workbook>"
     )
 
+    workbook_rel_entries = "".join(
+        f'<Relationship Id="rId{sheet_idx}" '
+        'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" '
+        f'Target="worksheets/sheet{sheet_idx}.xml"/>'
+        for sheet_idx in range(1, len(sheets) + 1)
+    )
     workbook_rels_xml = (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-        '<Relationship Id="rId1" '
-        'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" '
-        'Target="worksheets/sheet1.xml"/>'
+        f"{workbook_rel_entries}"
         "</Relationships>"
     )
 
@@ -195,6 +218,11 @@ def write_xlsx(
         "</Relationships>"
     )
 
+    worksheet_overrides = "".join(
+        f'<Override PartName="/xl/worksheets/sheet{sheet_idx}.xml" '
+        'ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+        for sheet_idx in range(1, len(sheets) + 1)
+    )
     content_types_xml = (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
@@ -202,8 +230,7 @@ def write_xlsx(
         '<Default Extension="xml" ContentType="application/xml"/>'
         '<Override PartName="/xl/workbook.xml" '
         'ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
-        '<Override PartName="/xl/worksheets/sheet1.xml" '
-        'ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+        f"{worksheet_overrides}"
         "</Types>"
     )
 
@@ -215,7 +242,8 @@ def write_xlsx(
         archive.writestr("_rels/.rels", package_rels_xml)
         archive.writestr("xl/workbook.xml", workbook_xml)
         archive.writestr("xl/_rels/workbook.xml.rels", workbook_rels_xml)
-        archive.writestr("xl/worksheets/sheet1.xml", worksheet_xml)
+        for sheet_idx, worksheet_xml in enumerate(worksheet_xmls, start=1):
+            archive.writestr(f"xl/worksheets/sheet{sheet_idx}.xml", worksheet_xml)
     if path.exists():
         path.unlink()
     tmp_path.replace(path)

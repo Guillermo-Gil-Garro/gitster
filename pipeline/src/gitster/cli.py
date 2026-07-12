@@ -90,11 +90,11 @@ def _cmd_curate(args: argparse.Namespace) -> None:
     paths = _resolve_paths(args, existing=True)
 
     run_candidates(config, paths)
-    run_curation_sync(config, paths)
+    run_curation_sync(config, paths, musicbrainz=args.musicbrainz)
 
     if args.review_csv or args.review_xlsx:
         run_review_import(config, paths, review_csv=args.review_csv, review_xlsx=args.review_xlsx)
-        run_curation_sync(config, paths)
+        run_curation_sync(config, paths, musicbrainz=args.musicbrainz)
 
     run_audit_exports(config, paths)
     logger.info("Curation complete for run %s", paths.run_id)
@@ -166,6 +166,11 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_arguments(curate_parser)
     curate_parser.add_argument("--review-csv", default=None)
     curate_parser.add_argument("--review-xlsx", default=None)
+    curate_parser.add_argument(
+        "--musicbrainz",
+        action="store_true",
+        help="enrich the review template with MusicBrainz first-release years (slow, rate-limited)",
+    )
     curate_parser.set_defaults(handler=_cmd_curate)
 
     build_parser_ = subparsers.add_parser("build-deck", help="select, package and render the modular deck")
@@ -186,6 +191,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--discard-pending", action="store_true")
     run_parser.add_argument("--review-csv", default=None)
     run_parser.add_argument("--review-xlsx", default=None)
+    run_parser.add_argument(
+        "--musicbrainz",
+        action="store_true",
+        help="enrich the review template with MusicBrainz first-release years (slow, rate-limited)",
+    )
     run_parser.set_defaults(handler=_cmd_run)
 
     registry_parser = subparsers.add_parser("registry", help="inspect or update the printed registry")
