@@ -30,7 +30,7 @@ from gitster.curation import (
     run_review_import,
 )
 from gitster.curation.store import resolve_global_store_dir
-from gitster.deck.build import PRINT_SCOPES, run_build_deck
+from gitster.deck.build import PRINT_SCOPES, RENDER_SPLITS, run_build_deck
 from gitster.deck.registry import load_registry, mark_printed, validate_registry
 from gitster.identity import IDENTITY_VERSION
 from gitster.io_utils import read_parquet
@@ -109,6 +109,7 @@ def _cmd_build_deck(args: argparse.Namespace) -> None:
         version=args.version,
         print_scope=args.print_scope,
         discard_pending=args.discard_pending,
+        render_split=args.render_split,
     )
 
 
@@ -182,12 +183,19 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="drop never-printed pending cards from the registry before selecting",
     )
+    build_parser_.add_argument(
+        "--render-split",
+        choices=RENDER_SPLITS,
+        default="combined",
+        help="one full-deck PDF (combined, default), one PDF per expansion, or both",
+    )
     build_parser_.set_defaults(handler=_cmd_build_deck)
 
     run_parser = subparsers.add_parser("run", help="ingest + curate + build-deck in one go")
     _add_common_arguments(run_parser)
     run_parser.add_argument("--version", required=True)
     run_parser.add_argument("--print-scope", choices=PRINT_SCOPES, default="new-only")
+    run_parser.add_argument("--render-split", choices=RENDER_SPLITS, default="combined")
     run_parser.add_argument("--discard-pending", action="store_true")
     run_parser.add_argument("--review-csv", default=None)
     run_parser.add_argument("--review-xlsx", default=None)

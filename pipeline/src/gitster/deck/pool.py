@@ -45,14 +45,23 @@ def build_modular_pool(
     instances_df: pd.DataFrame,
     song_variant_map_df: pd.DataFrame,
     run_id: str,
+    active_owner_ids: list[str] | None = None,
 ) -> pd.DataFrame:
     """Full curated pool with owner_ids, year_final and guardrail keys attached.
 
     Rows excluded by the max-year rule (current year not yet closed) are dropped;
     rows without year_final stay in the frame (the selector skips them) so QC can
-    count them.
+    count them. When active_owner_ids is given, ownership is restricted to those
+    players: departed players disappear from owners/footers, and songs only they
+    had become ineligible.
     """
     song_owner_ids_by_song_id = build_song_owner_ids_by_song_id(instances_df, song_variant_map_df)
+    if active_owner_ids is not None:
+        active_set = set(active_owner_ids)
+        song_owner_ids_by_song_id = {
+            song_id: [owner_id for owner_id in owner_ids if owner_id in active_set]
+            for song_id, owner_ids in song_owner_ids_by_song_id.items()
+        }
 
     merged_df = songs_curated_df.merge(
         years_curated_df.reindex(columns=_YEARS_COLUMNS),

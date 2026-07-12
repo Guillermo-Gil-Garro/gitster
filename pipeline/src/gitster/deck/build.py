@@ -35,6 +35,7 @@ from gitster.paths import RunPaths
 logger = logging.getLogger(__name__)
 
 PRINT_SCOPES = ("new-only", "all")
+RENDER_SPLITS = ("combined", "per-expansion", "both")
 
 
 def _pipeline_root() -> Path:
@@ -60,9 +61,12 @@ def run_build_deck(
     version: str,
     print_scope: str = "new-only",
     discard_pending: bool = False,
+    render_split: str = "combined",
 ) -> None:
     if print_scope not in PRINT_SCOPES:
         raise ValueError(f"print_scope must be one of {PRINT_SCOPES}, got {print_scope!r}")
+    if render_split not in RENDER_SPLITS:
+        raise ValueError(f"render_split must be one of {RENDER_SPLITS}, got {render_split!r}")
 
     songs_curated_df = _load_processed(paths, "songs_curated")
     years_curated_df = _load_processed(paths, "years_curated")
@@ -79,16 +83,16 @@ def run_build_deck(
     for issue in issues:
         logger.warning("Registry issue: %s", issue)
 
+    active_owner_ids = [owner.owner_id for owner in config.owners]
     pool_df = build_modular_pool(
         songs_curated_df=songs_curated_df,
         years_curated_df=years_curated_df,
         instances_df=instances_df,
         song_variant_map_df=song_variant_map_df,
         run_id=paths.run_id,
+        active_owner_ids=active_owner_ids,
     )
     logger.info("Selection pool: %d curated songs", len(pool_df))
-
-    active_owner_ids = [owner.owner_id for owner in config.owners]
     target_sizes = {owner_id: config.deck.size_for(owner_id) for owner_id in active_owner_ids}
     result = select_modular_deck(
         pool_df,
@@ -133,29 +137,34 @@ def run_build_deck(
         write_xlsx(paths.reports_dir / "deck_new_cards.xlsx", report_cards_df, sheet_name="new_cards")
 
     front_dir, back_bg_path = default_asset_paths()
-    rendered_any = False
-    for owner_id in active_owner_ids:
-        if print_scope == "new-only":
-            expansion_cards_df = new_cards_df[new_cards_df["expansion_anchor"] == owner_id]
-        else:
-            expansion_cards_df = card_rows_from_registry(
-                registry_after_df[registry_after_df["expansion_anchor"] == owner_id],
-                owner_name_map,
-                owner_color_map,
-            )
-        if expansion_cards_df.empty:
-            continue
-        out_dir = paths.renders_dir / f"expansion_{owner_id}"
+    if print_scope == "new-only":
+        printable_cards_df = new_cards_df
+    else:
+        printable_cards_df = card_rows_from_registry(registry_after_df, owner_name_map, owner_color_map)
+
+    render_jobs: list[tuple[str, pd.DataFrame]] = []
+    if render_split in ("combined", "both") and not printable_cards_df.empty:
+        combined_df = printable_cards_df.sort_values(
+            ["expansion_anchor", "selection_rank"], kind="stable"
+        ).reset_index(drop=True)
+        render_jobs.append(("full_deck", combined_df))
+    if render_split in ("per-expansion", "both"):
+        for owner_id in active_owner_ids:
+            expansion_cards_df = printable_cards_df[printable_cards_df["expansion_anchor"] == owner_id]
+            if not expansion_cards_df.empty:
+                render_jobs.append((f"expansion_{owner_id}", expansion_cards_df))
+
+    for job_name, job_cards_df in render_jobs:
+        out_dir = paths.renders_dir / job_name
         written = render_deck_pdfs(
-            expansion_cards_df,
+            job_cards_df,
             out_dir=out_dir,
             front_dir=front_dir,
             back_bg_path=back_bg_path,
         )
-        rendered_any = True
-        logger.info("Rendered %d PDFs for expansion %s in %s", len(written), owner_id, out_dir)
+        logger.info("Rendered %d PDFs (%d cards) in %s", len(written), len(job_cards_df), out_dir)
 
-    if not rendered_any:
+    if not render_jobs:
         logger.info("Nothing to render for print scope %s", print_scope)
 
     registry_snapshot_path = paths.reports_dir / "printed_registry_snapshot.csv"
@@ -168,6 +177,8 @@ def run_build_deck(
         new_cards_df=new_cards_df,
         version=version,
         out_path=paths.reports_dir / "deck_report.html",
+        owner_name_map=owner_name_map,
+        owner_color_map=owner_color_map,
     )
 
     logger.info(

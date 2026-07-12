@@ -39,8 +39,16 @@ TEXT_SIDE_PAD_RATIO = 0.10
 PLATE_MARGIN_X_RATIO = 0.055
 PLATE_BOTTOM_RATIO = 0.035
 PLATE_TOP_RATIO = 0.925
-PLATE_ALPHA = 0.72
+PLATE_ALPHA = 0.0
 PLATE_CORNER_MM = 3.0
+# Default design: subtitle-style white halo behind every glyph (background
+# stays fully visible) plus a small 40% plate under the owners footer only,
+# whose tiny italic type is too thin for the halo to carry on loud areas.
+TEXT_HALO = True
+OWNERS_PLATE_ALPHA = 0.40
+OWNERS_PLATE_MARGIN_X_RATIO = 0.07
+OWNERS_PLATE_PAD_Y_RATIO = 0.012
+OWNERS_PLATE_CORNER_MM = 1.6
 FRAME_INSET_MM = 1.1
 FRAME_WIDTH_MM = 1.6
 FRAME_CORNER_MM = 2.4
@@ -414,6 +422,41 @@ def fit_wrapped_text(
     return smallest_size, lines
 
 
+def _halo_offsets(font_size: float) -> list[tuple[float, float]]:
+    radius = max(0.7, font_size * 0.06)
+    diagonal = radius * 0.7071
+    return [
+        (-radius, 0.0),
+        (radius, 0.0),
+        (0.0, -radius),
+        (0.0, radius),
+        (-diagonal, -diagonal),
+        (diagonal, -diagonal),
+        (-diagonal, diagonal),
+        (diagonal, diagonal),
+    ]
+
+
+def _draw_centred_halo(c: canvas.Canvas, x: float, y: float, text: str, font_size: float) -> None:
+    if not TEXT_HALO:
+        return
+    c.saveState()
+    c.setFillColor(colors.white)
+    for dx, dy in _halo_offsets(font_size):
+        c.drawCentredString(x + dx, y + dy, text)
+    c.restoreState()
+
+
+def _draw_string_halo(c: canvas.Canvas, x: float, y: float, text: str, font_size: float) -> None:
+    if not TEXT_HALO:
+        return
+    c.saveState()
+    c.setFillColor(colors.white)
+    for dx, dy in _halo_offsets(font_size):
+        c.drawString(x + dx, y + dy, text)
+    c.restoreState()
+
+
 def draw_centered_lines(
     c: canvas.Canvas,
     *,
@@ -423,10 +466,13 @@ def draw_centered_lines(
     x_center: float,
     y_top: float,
     line_gap: float,
+    halo: bool = True,
 ) -> float:
     current_y = y_top
     c.setFont(font_name, font_size)
     for line in lines:
+        if halo:
+            _draw_centred_halo(c, x_center, current_y, line, font_size)
         c.drawCentredString(x_center, current_y, line)
         current_y -= font_size + line_gap
     return current_y
@@ -447,6 +493,7 @@ def draw_centered_rich_lines(
         current_x = x_center - (total_width / 2.0)
         for segment in line_segments:
             c.setFont(segment["font_name"], font_size)
+            _draw_string_halo(c, current_x, current_y, segment["text"], font_size)
             c.drawString(current_x, current_y, segment["text"])
             current_x += string_width(segment["text"], segment["font_name"], font_size)
         current_y -= font_size + line_gap
@@ -508,6 +555,7 @@ def draw_centered_lines_in_box(
     box_bottom: float,
     line_gap: float,
     vertical_align: str,
+    halo: bool = True,
 ) -> None:
     total_height = block_height(line_count=len(lines), font_size=font_size, line_gap=line_gap)
     box_height = max(0.0, box_top - box_bottom)
@@ -528,6 +576,7 @@ def draw_centered_lines_in_box(
         x_center=x_center,
         y_top=y_top,
         line_gap=line_gap,
+        halo=halo,
     )
 
 
@@ -618,6 +667,8 @@ def draw_owner_frame(c: canvas.Canvas, *, x: float, y: float, w: float, h: float
 
 
 def _draw_text_plate(c: canvas.Canvas, *, x: float, y: float, w: float, h: float) -> None:
+    if PLATE_ALPHA <= 0:
+        return
     plate_x = x + (w * PLATE_MARGIN_X_RATIO)
     plate_w = w - 2 * (w * PLATE_MARGIN_X_RATIO)
     plate_y = y + (h * PLATE_BOTTOM_RATIO)
@@ -667,6 +718,7 @@ def draw_text_card(
     year_center_y = (year_box_top + year_box_bottom) / 2.0
     year_baseline = year_center_y - (0.34 * year_size)
     c.setFont("Helvetica-Bold", year_size)
+    _draw_centred_halo(c, x_center, year_baseline, year_value, year_size)
     c.drawCentredString(x_center, year_baseline, year_value)
 
     title_size, title_gap, title_lines = fit_text_box(
@@ -719,6 +771,22 @@ def draw_text_card(
         line_gap_factor=0.08,
     )
     if owners_lines:
+        if OWNERS_PLATE_ALPHA > 0:
+            pad_y = h * OWNERS_PLATE_PAD_Y_RATIO
+            plate_x = x + (w * OWNERS_PLATE_MARGIN_X_RATIO)
+            c.saveState()
+            c.setFillColor(colors.white)
+            c.setFillAlpha(OWNERS_PLATE_ALPHA)
+            c.roundRect(
+                plate_x,
+                footer_box_bottom - pad_y,
+                w - 2 * (w * OWNERS_PLATE_MARGIN_X_RATIO),
+                (footer_box_top - footer_box_bottom) + 2 * pad_y,
+                mm_to_pt(OWNERS_PLATE_CORNER_MM),
+                stroke=0,
+                fill=1,
+            )
+            c.restoreState()
         draw_centered_lines_in_box(
             c,
             lines=owners_lines,
@@ -729,6 +797,7 @@ def draw_text_card(
             box_bottom=footer_box_bottom,
             line_gap=owners_gap,
             vertical_align="bottom",
+            halo=False,
         )
 
 
