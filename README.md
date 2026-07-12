@@ -2,7 +2,9 @@
 
 Gitster is a custom, self-hosted take on the [Hitster](https://hitstergame.com/) music board game: the deck is built from **your own group's Spotify playlists**, printed as physical cards with QR codes, and played with a companion Android app that scans a card and plays the song through Spotify.
 
-Rules of the game (with tokens, bets and steals on top of vanilla Hitster): [Español](docs/rules/es/index.html) · [English](docs/rules/en/index.html)
+Rules of the game (with tokens, bets and steals on top of vanilla Hitster): [Español](https://guillermo-gil-garro.github.io/gitster/rules/es/) · [English](https://guillermo-gil-garro.github.io/gitster/rules/en/)
+
+Operator's guide (Spanish): [COMO_GENERAR_UN_MAZO.md](COMO_GENERAR_UN_MAZO.md) — the full playlist-to-printed-deck walkthrough.
 
 ## Repository layout
 
