@@ -38,6 +38,8 @@ class ExpansionState:
     year_counts: Counter = field(default_factory=Counter)
     artist_counts: Counter = field(default_factory=Counter)
     album_counts: Counter = field(default_factory=Counter)
+    owner_set_counts: Counter = field(default_factory=Counter)
+    co_owner_counts: Counter = field(default_factory=Counter)
     picked: list[dict] = field(default_factory=list)
     exhausted: bool = False
 
@@ -77,16 +79,30 @@ def _album_key(record: dict) -> str | None:
 def _sort_key(record: dict, state: ExpansionState) -> tuple:
     year_value = _normalize_year(record.get("year_final"))
     year_count = state.year_counts[year_value]
-    owners_count = len(record.get("owner_ids") or [])
+    owner_ids = record.get("owner_ids") or []
+    owners_count = len(owner_ids)
     artist_key = _artist_key(record) or _MISSING_KEY
     popularity = record.get("popularity_winner")
     popularity_missing = 1 if popularity is None or pd.isna(popularity) else 0
     popularity_value = 0.0 if popularity_missing else float(popularity)
 
+    # Anti-clique softeners: avoid saturating an expansion with cards owned by
+    # the exact same small group, and spread shared cards over co-owners that
+    # are still under-represented in this expansion.
+    owner_set_count = state.owner_set_counts[frozenset(owner_ids)]
+    co_owner_ids = [owner_id for owner_id in owner_ids if owner_id != state.owner_id]
+    co_owner_average = (
+        sum(state.co_owner_counts[owner_id] for owner_id in co_owner_ids) / len(co_owner_ids)
+        if co_owner_ids
+        else 0.0
+    )
+
     return (
         0 if year_count == 0 else 1,
         year_count,
         -(owners_count - 1),
+        owner_set_count,
+        co_owner_average,
         state.artist_counts[artist_key],
         popularity_missing,
         -popularity_value,
@@ -99,6 +115,12 @@ def _register(record: dict, state: ExpansionState) -> None:
     year_value = _normalize_year(record.get("year_final"))
     if year_value is not None:
         state.year_counts[year_value] += 1
+
+    owner_ids = record.get("owner_ids") or []
+    state.owner_set_counts[frozenset(owner_ids)] += 1
+    for owner_id in owner_ids:
+        if owner_id != state.owner_id:
+            state.co_owner_counts[owner_id] += 1
 
     artist_key = _artist_key(record)
     if artist_key is not None:

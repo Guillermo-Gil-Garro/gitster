@@ -12,8 +12,7 @@ import pandas as pd
 from gitster.deck.registry import make_card_id, next_card_number, split_owners
 from gitster.identity import normalize_string_list, normalize_string_scalar
 
-# g09 is intentionally absent: kept out of rotation in the print-validated design.
-FRONT_BG_IDS = ["g01", "g02", "g03", "g04", "g05", "g06", "g07", "g08", "g10"]
+FRONT_BG_IDS = [f"g{index:02d}" for index in range(1, 13)]
 
 CARD_COLUMNS = [
     "selection_rank",
@@ -32,6 +31,7 @@ CARD_COLUMNS = [
     "year_final",
     "owners",
     "owners_display",
+    "owner_color",
 ]
 
 SPOTIFY_TRACK_URL_PREFIX = "https://open.spotify.com/track/"
@@ -85,6 +85,7 @@ def build_new_card_rows(
     *,
     owner_name_map: dict[str, str],
     track_url_map: dict[str, str],
+    owner_color_map: dict[str, str] | None = None,
 ) -> pd.DataFrame:
     """Card rows for freshly selected songs, numbered after the registry's last card."""
     if new_cards_df.empty:
@@ -124,6 +125,7 @@ def build_new_card_rows(
                 "year_final": int(record["year_final"]),
                 "owners": "|".join(owner_ids),
                 "owners_display": format_owners_display(owner_ids, owner_name_map),
+                "owner_color": (owner_color_map or {}).get(anchor),
             }
         )
 
@@ -134,7 +136,11 @@ def build_new_card_rows(
     return cards_df
 
 
-def card_rows_from_registry(registry_df: pd.DataFrame, owner_name_map: dict[str, str]) -> pd.DataFrame:
+def card_rows_from_registry(
+    registry_df: pd.DataFrame,
+    owner_name_map: dict[str, str],
+    owner_color_map: dict[str, str] | None = None,
+) -> pd.DataFrame:
     """Card rows reconstructed from the registry (for full reprints and deck.json)."""
     if registry_df.empty:
         return pd.DataFrame(columns=CARD_COLUMNS)
@@ -162,6 +168,7 @@ def card_rows_from_registry(registry_df: pd.DataFrame, owner_name_map: dict[str,
                 "year_final": int(record["year"]) if pd.notna(record.get("year")) else None,
                 "owners": record.get("owners"),
                 "owners_display": format_owners_display(owner_ids, owner_name_map),
+                "owner_color": (owner_color_map or {}).get(record["expansion_anchor"]),
             }
         )
     return pd.DataFrame(rows, columns=CARD_COLUMNS)

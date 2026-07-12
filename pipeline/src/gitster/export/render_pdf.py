@@ -33,6 +33,17 @@ COLS = 3
 PER_SHEET = ROWS * COLS
 
 TEXT_SIDE_PAD_RATIO = 0.10
+
+# Translucent plate behind the front text (legibility over any background) and
+# the per-player color frame drawn inside the cut line on both faces.
+PLATE_MARGIN_X_RATIO = 0.055
+PLATE_BOTTOM_RATIO = 0.035
+PLATE_TOP_RATIO = 0.925
+PLATE_ALPHA = 0.72
+PLATE_CORNER_MM = 3.0
+FRAME_INSET_MM = 1.1
+FRAME_WIDTH_MM = 1.6
+FRAME_CORNER_MM = 2.4
 TITLE_BOX_TOP_RATIO = 0.90
 TITLE_BOX_BOTTOM_RATIO = 0.69
 YEAR_BOX_TOP_RATIO = 0.60
@@ -575,6 +586,49 @@ def draw_cut_grid(
     c.restoreState()
 
 
+def _parse_hex_color(value: str | None):
+    text = (value or "").strip()
+    if not text:
+        return None
+    try:
+        return colors.HexColor(text)
+    except ValueError:
+        logger.warning("Ignoring invalid owner color %r", value)
+        return None
+
+
+def draw_owner_frame(c: canvas.Canvas, *, x: float, y: float, w: float, h: float, owner_color: str | None) -> None:
+    frame_color = _parse_hex_color(owner_color)
+    if frame_color is None:
+        return
+    inset = mm_to_pt(FRAME_INSET_MM)
+    c.saveState()
+    c.setStrokeColor(frame_color)
+    c.setLineWidth(mm_to_pt(FRAME_WIDTH_MM))
+    c.roundRect(
+        x + inset,
+        y + inset,
+        w - 2 * inset,
+        h - 2 * inset,
+        mm_to_pt(FRAME_CORNER_MM),
+        stroke=1,
+        fill=0,
+    )
+    c.restoreState()
+
+
+def _draw_text_plate(c: canvas.Canvas, *, x: float, y: float, w: float, h: float) -> None:
+    plate_x = x + (w * PLATE_MARGIN_X_RATIO)
+    plate_w = w - 2 * (w * PLATE_MARGIN_X_RATIO)
+    plate_y = y + (h * PLATE_BOTTOM_RATIO)
+    plate_h = (h * PLATE_TOP_RATIO) - (h * PLATE_BOTTOM_RATIO)
+    c.saveState()
+    c.setFillColor(colors.white)
+    c.setFillAlpha(PLATE_ALPHA)
+    c.roundRect(plate_x, plate_y, plate_w, plate_h, mm_to_pt(PLATE_CORNER_MM), stroke=0, fill=1)
+    c.restoreState()
+
+
 def draw_text_card(
     c: canvas.Canvas,
     *,
@@ -587,8 +641,11 @@ def draw_text_card(
     year_text: str,
     artist_text: str,
     owners_text: str,
+    owner_color: str | None = None,
 ) -> None:
     c.drawImage(background_reader, x, y, w, h, mask="auto")
+    _draw_text_plate(c, x=x, y=y, w=w, h=h)
+    draw_owner_frame(c, x=x, y=y, w=w, h=h, owner_color=owner_color)
 
     x_center = x + (w / 2.0)
     pad_x = w * TEXT_SIDE_PAD_RATIO
@@ -685,6 +742,7 @@ def draw_qr_card(
     background_reader: ImageReader,
     qr_payload: str,
     qr_cache: dict[str, ImageReader],
+    owner_color: str | None = None,
 ) -> None:
     c.drawImage(background_reader, x, y, w, h, mask="auto")
     qr_size = min(mm_to_pt(QR_MM), min(w, h) * 0.82)
@@ -692,6 +750,7 @@ def draw_qr_card(
     qr_y = y + (h - qr_size) / 2.0
     qr_reader = make_qr_reader(qr_payload, qr_cache)
     c.drawImage(qr_reader, qr_x, qr_y, qr_size, qr_size, mask="auto")
+    draw_owner_frame(c, x=x, y=y, w=w, h=h, owner_color=owner_color)
 
 
 def generate_pdf(
@@ -745,6 +804,7 @@ def generate_pdf(
                     year_text=safe_str(card_row.get("year_final")),
                     artist_text=safe_str(card_row.get("artists_display_resolved")),
                     owners_text=safe_str(card_row.get("owners_display")),
+                    owner_color=safe_str(card_row.get("owner_color")) or None,
                 )
 
         draw_cut_grid(
@@ -781,6 +841,7 @@ def generate_pdf(
                     background_reader=back_bg_reader,
                     qr_payload=safe_str(card_row.get("qr_payload")),
                     qr_cache=qr_cache,
+                    owner_color=safe_str(card_row.get("owner_color")) or None,
                 )
 
         draw_cut_grid(

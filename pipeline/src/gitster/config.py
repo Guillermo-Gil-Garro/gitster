@@ -5,11 +5,25 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 
+# Assigned by position when an owner has no explicit "color" in the config.
+DEFAULT_OWNER_COLORS = [
+    "#00E5FF",
+    "#FF3D71",
+    "#FFD166",
+    "#7CFC00",
+    "#B388FF",
+    "#FF8C42",
+    "#4DD599",
+    "#FF6FD8",
+]
+
+
 @dataclass
 class OwnerPlaylist:
     owner_id: str
     owner_name: str
     playlist: str
+    color: str = "#FFFFFF"
 
 
 @dataclass
@@ -48,8 +62,9 @@ def load_run_config(path: str | Path) -> RunConfig:
             owner_id=item["owner_id"],
             owner_name=item["owner_name"],
             playlist=item["playlist"],
+            color=item.get("color", DEFAULT_OWNER_COLORS[index % len(DEFAULT_OWNER_COLORS)]),
         )
-        for item in data["owners"]
+        for index, item in enumerate(data["owners"])
     ]
     if not owners:
         raise ValueError(f"{config_path}: 'owners' must contain at least one entry")

@@ -3,11 +3,12 @@
     {
       "owner_id": "guille",
       "owner_name": "Guille",
-      "playlist": "https://open.spotify.com/playlist/REPLACE_ME"
+      "playlist": "https://open.spotify.com/playlist/REPLACE_ME",
+      "color": "#00E5FF"
     }
   ],
   "deck": {
-    "expansion_size": 60,
+    "expansion_size": 40,
     "expansion_size_overrides": {},
     "artist_cap_per_expansion": 3,
     "album_cap_per_expansion": 2

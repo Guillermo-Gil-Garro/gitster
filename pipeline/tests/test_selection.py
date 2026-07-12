@@ -206,6 +206,37 @@ def test_guardrail_prevents_same_editorial_song_twice():
     assert len(result.new_cards_df) == 1
 
 
+def test_anti_clique_spreads_co_owners():
+    # sam's playlist: 3 songs shared only with ruth, 3 shared only with blo,
+    # same years pairwise. Without the owner-set softener the song_id tiebreak
+    # would let one pair dominate; with it, co-owners alternate.
+    rows = []
+    for index, (co_owner, year) in enumerate(
+        [("ruth", 1990), ("ruth", 1991), ("ruth", 1992), ("blo", 1990), ("blo", 1991), ("blo", 1992)]
+    ):
+        rows.append(
+            {
+                "year_final": year,
+                "owner_ids": ["sam", co_owner],
+                "primary_artist_name": f"Artist{index}",
+            }
+        )
+    pool = _pool(rows)
+
+    result = select_modular_deck(
+        pool,
+        _empty_registry(),
+        active_owner_ids=["sam"],
+        target_sizes={"sam": 4},
+    )
+
+    co_owners = [
+        (set(row["owner_ids"]) - {"sam"}).pop()
+        for row in result.new_cards_df.to_dict(orient="records")
+    ]
+    assert sorted(co_owners) == ["blo", "blo", "ruth", "ruth"]
+
+
 def test_year_variety_preferred_within_expansion():
     pool = _pool(
         [

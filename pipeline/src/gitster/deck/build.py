@@ -103,11 +103,13 @@ def run_build_deck(
 
     owner_name_map = build_owner_name_map(instances_df)
     track_url_map = build_track_url_map(instances_df)
+    owner_color_map = {owner.owner_id: owner.color for owner in config.owners}
     new_cards_df = build_new_card_rows(
         result.new_cards_df,
         registry_df,
         owner_name_map=owner_name_map,
         track_url_map=track_url_map,
+        owner_color_map=owner_color_map,
     )
 
     if new_cards_df.empty:
@@ -139,6 +141,7 @@ def run_build_deck(
             expansion_cards_df = card_rows_from_registry(
                 registry_after_df[registry_after_df["expansion_anchor"] == owner_id],
                 owner_name_map,
+                owner_color_map,
             )
         if expansion_cards_df.empty:
             continue
