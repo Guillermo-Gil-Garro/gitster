@@ -51,7 +51,6 @@ OWNERS_PLATE_PAD_Y_RATIO = 0.012
 OWNERS_PLATE_CORNER_MM = 1.6
 FRAME_INSET_MM = 1.1
 FRAME_WIDTH_MM = 1.6
-FRAME_CORNER_MM = 2.4
 TITLE_BOX_TOP_RATIO = 0.90
 TITLE_BOX_BOTTOM_RATIO = 0.69
 YEAR_BOX_TOP_RATIO = 0.60
@@ -650,16 +649,17 @@ def draw_owner_frame(c: canvas.Canvas, *, x: float, y: float, w: float, h: float
     frame_color = _parse_hex_color(owner_color)
     if frame_color is None:
         return
+    # Square corners on purpose: cards are cut as squares, so a rounded frame
+    # would clash with the cut edge.
     inset = mm_to_pt(FRAME_INSET_MM)
     c.saveState()
     c.setStrokeColor(frame_color)
     c.setLineWidth(mm_to_pt(FRAME_WIDTH_MM))
-    c.roundRect(
+    c.rect(
         x + inset,
         y + inset,
         w - 2 * inset,
         h - 2 * inset,
-        mm_to_pt(FRAME_CORNER_MM),
         stroke=1,
         fill=0,
     )
