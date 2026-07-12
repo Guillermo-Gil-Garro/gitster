@@ -2,9 +2,12 @@
 
 Ported from the v2 pipeline deck report (summary stats, sortable and
 filterable card table, theme toggle, print view) and adapted to per-player
-expansions: the cards payload is the whole physical registry, and the table
-can be filtered per expansion with client-side stat recomputation. The
-year-coverage matrix of the previous compact report is kept as a section.
+expansions: the cards payload is the whole physical registry, and the table,
+KPIs and charts can be filtered per expansion with client-side recomputation.
+
+All charts (years histogram with bin toggle, owner appearances, owner
+combinations, top artists) are rendered client-side in deck_report_base.js
+from the embedded cards payload, so they always reflect the filtered subset.
 
 CSS/JS are loaded at build time from the stable assets directory
 (assets/deck/report) and inlined into the document, mirroring the v2 pattern.
@@ -16,7 +19,6 @@ import html
 import json
 import logging
 from datetime import datetime
-from itertools import combinations
 from pathlib import Path
 
 import pandas as pd
@@ -30,7 +32,7 @@ DECK_REPORT_ASSETS_DIR = _PIPELINE_ROOT / "assets" / "deck" / "report"
 
 SPOTIFY_TRACK_URL_PREFIX = "https://open.spotify.com/track/"
 
-# Fallback palette when an expansion has no configured owner color.
+# Fallback palette when an owner has no configured color.
 _DEFAULT_CHIP_COLORS = ["#00E5FF", "#FF2BD6", "#8A5CFF", "#FFB000", "#2FE36D", "#FF3B3B"]
 
 
@@ -67,8 +69,6 @@ def _report_js() -> str:
 def _as_text(value) -> str:
     if value is None:
         return ""
-    if isinstance(value, float) and pd.isna(value):
-        return ""
     if pd.isna(value):
         return ""
     return str(value)
@@ -84,42 +84,9 @@ def _parse_int(value) -> int | None:
         return None
 
 
-# --------------------------------------------------------------------------- year coverage matrix (preserved from the compact report)
-
-
-def _years_by_expansion(registry_df: pd.DataFrame) -> dict[str, set[int]]:
-    years: dict[str, set[int]] = {}
-    for record in registry_df.to_dict(orient="records"):
-        if pd.isna(record.get("year")):
-            continue
-        years.setdefault(record["expansion_anchor"], set()).add(int(record["year"]))
-    return years
-
-
-def _coverage_row(label: str, year_sets: list[set[int]]) -> dict:
-    combined: set[int] = set().union(*year_sets) if year_sets else set()
-    if not combined:
-        return {"combination": label, "cards_years": 0, "min": "", "max": "", "gaps": ""}
-    span = range(min(combined), max(combined) + 1)
-    gaps = [year for year in span if year not in combined]
-    return {
-        "combination": label,
-        "cards_years": len(combined),
-        "min": min(combined),
-        "max": max(combined),
-        "gaps": ", ".join(str(year) for year in gaps) if gaps else "none",
-    }
-
-
-def _build_coverage_rows(registry_df: pd.DataFrame) -> list[dict]:
-    years_by_expansion = _years_by_expansion(registry_df)
-    expansions = sorted(years_by_expansion)
-    coverage_rows = [_coverage_row(expansion, [years_by_expansion[expansion]]) for expansion in expansions]
-    for left, right in combinations(expansions, 2):
-        coverage_rows.append(_coverage_row(f"{left} + {right}", [years_by_expansion[left], years_by_expansion[right]]))
-    if len(expansions) > 2:
-        coverage_rows.append(_coverage_row("ALL", [years_by_expansion[expansion] for expansion in expansions]))
-    return coverage_rows
+def _primary_artist(artists: str) -> str:
+    """Primary artist = the display string cut at the ' feat. ' marker."""
+    return artists.split(" feat. ", 1)[0].strip()
 
 
 # --------------------------------------------------------------------------- static tables
@@ -141,139 +108,6 @@ def _table_html(rows: list[dict], columns: list[str], table_id: str) -> str:
         parts.append("</tr>")
     parts.append("</tbody></table>")
     return "".join(parts)
-
-
-# --------------------------------------------------------------------------- SVG charts (ported from v2, trimmed)
-
-
-def _format_year_bin_label(bin_start: int, bin_size: int) -> str:
-    bin_end = int(bin_start) + int(bin_size) - 1
-    if (int(bin_start) // 100) == (int(bin_end) // 100):
-        return f"{int(bin_start)}–{int(bin_end) % 100:02d}"
-    return f"{int(bin_start)}–{int(bin_end)}"
-
-
-def _build_year_bin_series(years: pd.Series, *, bin_size: int = 5) -> pd.Series:
-    if years.empty:
-        return pd.Series(dtype=int)
-    year_values = [int(year) for year in years.tolist()]
-    min_year = min(year_values)
-    max_year = max(year_values)
-    base_year = (min_year // bin_size) * bin_size
-    top_year = (max_year // bin_size) * bin_size
-    bucket_counts: dict[int, int] = {}
-    for year in year_values:
-        bucket_start = base_year + ((year - base_year) // bin_size) * bin_size
-        bucket_counts[bucket_start] = bucket_counts.get(bucket_start, 0) + 1
-    labels: list[str] = []
-    values: list[int] = []
-    for bucket_start in range(base_year, top_year + 1, bin_size):
-        count = bucket_counts.get(bucket_start, 0)
-        if count <= 0:
-            continue
-        labels.append(_format_year_bin_label(bucket_start, bin_size))
-        values.append(count)
-    return pd.Series(values, index=labels, dtype=int)
-
-
-def _svg_chart_block(svg_markup: str, title: str) -> str:
-    if not svg_markup:
-        return "<p class='muted'>No data for chart.</p>"
-    return f"<div class='chart-block'><div class='chart-title'>{html.escape(title)}</div>{svg_markup}</div>"
-
-
-def _svg_vertical_bar_chart(
-    series: pd.Series,
-    title: str,
-    *,
-    bar_variant: str = "primary",
-    width: int = 980,
-    height: int = 320,
-) -> str:
-    if series is None or series.empty:
-        return ""
-    labels = [str(label) for label in series.index.tolist()]
-    values = [int(value) for value in pd.to_numeric(series, errors="coerce").fillna(0).tolist()]
-    if not any(values):
-        return ""
-    margin_left = 44
-    margin_right = 16
-    margin_top = 18
-    margin_bottom = 72
-    plot_width = width - margin_left - margin_right
-    plot_height = height - margin_top - margin_bottom
-    max_value = max(max(values), 1)
-    bar_slot = plot_width / max(len(values), 1)
-    bar_width = max(10.0, min(48.0, bar_slot * 0.7))
-    axis_y = height - margin_bottom
-    grid_values = sorted({0, max_value // 2, max_value})
-    label_step = 1 if len(labels) <= 16 else max(1, len(labels) // 12)
-    bar_class = "chart-bar-secondary" if bar_variant == "secondary" else "chart-bar"
-    parts = [
-        f"<svg class='chart chart-svg' viewBox='0 0 {width} {height}' role='img' "
-        f"aria-label='{html.escape(title, quote=True)}'>"
-    ]
-    for grid_value in grid_values:
-        y = margin_top + plot_height - (plot_height * (grid_value / max_value))
-        parts.append(f"<line class='chart-gridline' x1='{margin_left}' y1='{y:.2f}' x2='{width - margin_right}' y2='{y:.2f}' />")
-        parts.append(f"<text class='chart-label' x='{margin_left - 8}' y='{y + 4:.2f}' text-anchor='end'>{grid_value}</text>")
-    parts.append(f"<line class='chart-axis' x1='{margin_left}' y1='{axis_y}' x2='{width - margin_right}' y2='{axis_y}' />")
-    for index, (label, value) in enumerate(zip(labels, values, strict=False)):
-        x_center = margin_left + (index * bar_slot) + (bar_slot / 2.0)
-        bar_height = plot_height * (value / max_value)
-        y = axis_y - bar_height
-        x = x_center - (bar_width / 2.0)
-        parts.append(f"<rect class='{bar_class}' x='{x:.2f}' y='{y:.2f}' width='{bar_width:.2f}' height='{bar_height:.2f}' rx='4' ry='4' />")
-        parts.append(f"<text class='chart-value' x='{x_center:.2f}' y='{max(y - 6, margin_top + 10):.2f}' text-anchor='middle'>{value}</text>")
-        if index % label_step == 0 or index == len(labels) - 1:
-            parts.append(f"<text class='chart-label' x='{x_center:.2f}' y='{axis_y + 18:.2f}' text-anchor='middle'>{html.escape(label)}</text>")
-    parts.append("</svg>")
-    return _svg_chart_block("".join(parts), title)
-
-
-def _svg_horizontal_bar_chart(
-    series: pd.Series,
-    title: str,
-    *,
-    bar_variant: str = "primary",
-    width: int = 980,
-    row_height: int = 26,
-) -> str:
-    if series is None or series.empty:
-        return ""
-    labels = [str(label) for label in series.index.tolist()]
-    values = [int(value) for value in pd.to_numeric(series, errors="coerce").fillna(0).tolist()]
-    if not any(values):
-        return ""
-    height = max(160, 56 + (len(labels) * row_height))
-    margin_left = min(300, max(140, 8 * max((len(label) for label in labels), default=10)))
-    margin_right = 50
-    margin_top = 18
-    margin_bottom = 18
-    plot_width = width - margin_left - margin_right
-    plot_height = height - margin_top - margin_bottom
-    slot_height = plot_height / max(len(labels), 1)
-    bar_height = max(12.0, min(18.0, slot_height * 0.62))
-    max_value = max(max(values), 1)
-    bar_class = "chart-bar-secondary" if bar_variant == "secondary" else "chart-bar"
-    grid_values = sorted({0, max_value // 2, max_value})
-    parts = [
-        f"<svg class='chart chart-svg' viewBox='0 0 {width} {height}' role='img' "
-        f"aria-label='{html.escape(title, quote=True)}'>"
-    ]
-    for grid_value in grid_values:
-        x = margin_left + (plot_width * (grid_value / max_value))
-        parts.append(f"<line class='chart-gridline' x1='{x:.2f}' y1='{margin_top}' x2='{x:.2f}' y2='{height - margin_bottom}' />")
-        parts.append(f"<text class='chart-label' x='{x:.2f}' y='{height - 2:.2f}' text-anchor='middle'>{grid_value}</text>")
-    for index, (label, value) in enumerate(zip(labels, values, strict=False)):
-        y_center = margin_top + (index * slot_height) + (slot_height / 2.0)
-        y = y_center - (bar_height / 2.0)
-        bar_width = plot_width * (value / max_value)
-        parts.append(f"<text class='chart-label-strong' x='{margin_left - 10}' y='{y_center + 4:.2f}' text-anchor='end'>{html.escape(label)}</text>")
-        parts.append(f"<rect class='{bar_class}' x='{margin_left}' y='{y:.2f}' width='{bar_width:.2f}' height='{bar_height:.2f}' rx='4' ry='4' />")
-        parts.append(f"<text class='chart-value' x='{margin_left + bar_width + 8:.2f}' y='{y_center + 4:.2f}' text-anchor='start'>{value}</text>")
-    parts.append("</svg>")
-    return _svg_chart_block("".join(parts), title)
 
 
 # --------------------------------------------------------------------------- payload
@@ -301,6 +135,7 @@ def _build_cards_payload(
         card_id = _as_text(record.get("card_id"))
         track_id = _as_text(record.get("winner_track_id"))
         owner_ids = split_owners(record.get("owners"))
+        artists = _as_text(record.get("artists"))
         cards.append(
             {
                 "_row_index": idx,
@@ -308,8 +143,10 @@ def _build_cards_payload(
                 "expansion": _as_text(record.get("expansion_anchor")),
                 "year": _parse_int(record.get("year")) or "",
                 "title": _as_text(record.get("title")),
-                "artists": _as_text(record.get("artists")),
+                "artists": artists,
+                "primary_artist": _primary_artist(artists),
                 "owners": ", ".join(_owner_names(owner_ids, owner_name_map)),
+                "owner_ids": owner_ids,
                 "status": _as_text(record.get("printed_status")),
                 "version": _as_text(record.get("version")),
                 "is_new": card_id in new_card_ids,
@@ -344,6 +181,30 @@ def _build_expansion_items(
             }
         )
     return items
+
+
+def _build_owner_lookup(
+    cards: list[dict],
+    expansion_items: list[dict],
+    *,
+    owner_name_map: dict[str, str],
+    owner_color_map: dict[str, str],
+) -> dict[str, dict[str, str]]:
+    """Names and colors for every owner id the client-side charts may see."""
+    owner_ids: set[str] = {item["id"] for item in expansion_items}
+    for card in cards:
+        owner_ids.update(card["owner_ids"])
+    color_by_id = {item["id"]: item["color"] for item in expansion_items}
+    names: dict[str, str] = {}
+    colors: dict[str, str] = {}
+    for index, owner_id in enumerate(sorted(owner_ids)):
+        names[owner_id] = owner_name_map.get(owner_id) or owner_id
+        colors[owner_id] = (
+            owner_color_map.get(owner_id)
+            or color_by_id.get(owner_id)
+            or _DEFAULT_CHIP_COLORS[index % len(_DEFAULT_CHIP_COLORS)]
+        )
+    return {"names": names, "colors": colors}
 
 
 # --------------------------------------------------------------------------- HTML sections
@@ -436,6 +297,37 @@ def _render_deck_table_section(expansion_items: list[dict], total_cards: int) ->
     )
 
 
+def _render_charts_section() -> str:
+    """Empty chart hosts; deck_report_base.js renders into them from the payload."""
+    return (
+        "<div class='card' id='sec-charts'><h2>Charts (visible cards)</h2>"
+        "<p class='muted'>Charts follow the active table filters (expansion, search, year range).</p>"
+        "<div class='chart-block'>"
+        "<div class='chart-head'><div class='chart-title'>Cards per year</div>"
+        "<div id='year-bin-toggle' class='bin-toggle pdf-hide' role='group' aria-label='Year bin size'>"
+        "<button type='button' class='btn bin-btn' data-bin='1'>1y</button>"
+        "<button type='button' class='btn bin-btn active' data-bin='5'>5y</button>"
+        "<button type='button' class='btn bin-btn' data-bin='10'>10y</button>"
+        "</div></div>"
+        "<div id='chart-years' class='chart-host'></div>"
+        "</div>"
+        "<div class='chart-block'>"
+        "<div class='chart-title'>Owner appearances</div>"
+        "<div id='chart-owner-appearances' class='chart-host'></div>"
+        "</div>"
+        "<div class='chart-block'>"
+        "<div class='chart-title'>Owner combinations</div>"
+        "<div id='chart-owner-combos' class='chart-host'></div>"
+        "<div id='chart-owner-combos-note' class='muted'></div>"
+        "</div>"
+        "<div class='chart-block'>"
+        "<div class='chart-title'>Top 10 artists</div>"
+        "<div id='chart-top-artists' class='chart-host'></div>"
+        "</div>"
+        "</div>"
+    )
+
+
 def _render_new_cards_section(new_cards_df: pd.DataFrame) -> str:
     rows: list[dict] = []
     for record in new_cards_df.to_dict(orient="records"):
@@ -488,28 +380,22 @@ def write_deck_report(
         owner_name_map=owner_name_map,
         owner_color_map=owner_color_map,
     )
+    owner_lookup = _build_owner_lookup(
+        cards,
+        expansion_items,
+        owner_name_map=owner_name_map,
+        owner_color_map=owner_color_map,
+    )
 
     report_data = {
         "meta": {"report_id": f"gitster_deck:{version}", "version": version, "generated_at": generated_at},
         "cards": cards,
         "expansions": expansion_items,
+        "owners": owner_lookup,
     }
     report_data_json = json.dumps(report_data, ensure_ascii=False).replace("</", "<\\/")
 
     summary_rows = expansion_summary_df.to_dict(orient="records")
-    coverage_rows = _build_coverage_rows(registry_df)
-
-    years = pd.Series([card["year"] for card in cards if isinstance(card["year"], int)], dtype=int)
-    year_bin_chart = _svg_vertical_bar_chart(_build_year_bin_series(years, bin_size=5), "Cards per 5-year bin")
-    decade_chart = _svg_vertical_bar_chart(
-        ((years // 10) * 10).value_counts().sort_index() if not years.empty else pd.Series(dtype=int),
-        "Cards per decade",
-        bar_variant="secondary",
-    )
-    expansion_chart = _svg_horizontal_bar_chart(
-        pd.Series({item["name"]: item["cards"] for item in expansion_items if item["cards"]}, dtype=int),
-        "Cards per expansion",
-    )
 
     sections: list[str] = []
     sections.append(
@@ -523,6 +409,7 @@ def write_deck_report(
     )
     sections.append(_render_summary_stats(cards, len(expansion_items)))
     sections.append(_render_deck_table_section(expansion_items, len(cards)))
+    sections.append(_render_charts_section())
     sections.append(
         "<details id='sec-expansions' open><summary>Expansion summary</summary><div class='card'>"
         + (
@@ -530,16 +417,6 @@ def write_deck_report(
             if summary_rows
             else "<p class='muted'>No expansion data.</p>"
         )
-        + "</div></details>"
-    )
-    sections.append(
-        "<details id='sec-coverage' open><summary>Year coverage (single / pairs / all)</summary><div class='card'>"
-        + _table_html(coverage_rows, ["combination", "cards_years", "min", "max", "gaps"], "tbl_year_coverage")
-        + "</div></details>"
-    )
-    sections.append(
-        "<details id='sec-years' open><summary>Year distribution</summary><div class='card'>"
-        + (year_bin_chart + decade_chart + expansion_chart or "<p class='muted'>No year data.</p>")
         + "</div></details>"
     )
     sections.append(_render_new_cards_section(new_cards_df))

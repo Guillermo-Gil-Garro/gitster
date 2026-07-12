@@ -13,7 +13,7 @@ from gitster.export.report_html import (
 def _registry() -> pd.DataFrame:
     rows = [
         ("s1", "trk_ana_1", "GITSTER_ANA_001", "Alpha", "Artist One", 1990, "ana", "ana", "printed"),
-        ("s2", "trk_ana_2", "GITSTER_ANA_002", "Beta", "Artist Two", 1992, "ana|bob", "ana", "printed"),
+        ("s2", "trk_ana_2", "GITSTER_ANA_002", "Beta", "Artist Two feat. Guest", 1992, "ana|bob", "ana", "printed"),
         ("s3", "trk_ana_3", "GITSTER_ANA_003", "Gamma", "Artist Three", 1994, "ana", "ana", "pending"),
         ("s4", "trk_bob_1", "GITSTER_BOB_001", "Delta", "Artist Four", 1991, "bob", "bob", "printed"),
         ("s5", "trk_bob_2", "GITSTER_BOB_002", "Epsilon", "Artist Five", 1993, "bob", "bob", "printed"),
@@ -98,6 +98,17 @@ def test_report_contains_all_cards_and_payload(tmp_path):
     assert '"is_new": true' in text
 
 
+def test_payload_carries_chart_inputs(tmp_path):
+    text = _write_report(tmp_path).read_text(encoding="utf-8")
+
+    # Owners as a list of ids per card (for appearances/combination charts).
+    assert '"owner_ids": ["ana", "bob"]' in text
+    # Primary artist precomputed: artists string cut at " feat. ".
+    assert '"artists": "Artist Two feat. Guest", "primary_artist": "Artist Two"' in text
+    # Owner names + colors lookup for the client-side charts.
+    assert '"owners": {"names": {"ana": "Ana", "bob": "Bob"}, "colors": {"ana": "#00E5FF", "bob": "#FF2BD6"}}' in text
+
+
 def test_report_contains_expansion_filter_markup(tmp_path):
     text = _write_report(tmp_path).read_text(encoding="utf-8")
 
@@ -112,17 +123,27 @@ def test_report_contains_expansion_filter_markup(tmp_path):
     assert "Bob <span class='chip-count'>3</span>" in text
 
 
-def test_report_contains_year_coverage_matrix(tmp_path):
+def test_report_contains_chart_hosts_and_bin_toggle(tmp_path):
     text = _write_report(tmp_path).read_text(encoding="utf-8")
 
-    assert "tbl_year_coverage" in text
-    # ana alone: 1990/1992/1994 -> gaps 1991, 1993
-    assert "1991, 1993" in text
-    # bob alone: 1991/1993/2000 -> gaps include 1994..1999
-    assert "1994, 1995, 1996, 1997, 1998, 1999" in text
-    # pair ana + bob: union covers 1990-1994 and 2000 -> gaps 1995..1999
-    assert "ana + bob" in text
-    assert "1995, 1996, 1997, 1998, 1999" in text
+    for marker in [
+        "id='sec-charts'",
+        "id='chart-years'",
+        "id='chart-owner-appearances'",
+        "id='chart-owner-combos'",
+        "id='chart-owner-combos-note'",
+        "id='chart-top-artists'",
+        "id='year-bin-toggle'",
+        "data-bin='1'",
+        "data-bin='5'",
+        "data-bin='10'",
+    ]:
+        assert marker in text
+
+    # Removed sections must not come back.
+    assert "tbl_year_coverage" not in text
+    assert "Cards per expansion" not in text
+    assert "Cards per decade" not in text
 
 
 def test_report_contains_expansion_summary_table(tmp_path):
@@ -147,8 +168,11 @@ class TestDeckReportAssetLoading:
         js_text = _read_report_asset_text(_report_asset_paths()[1])
         assert ":root" in css_text
         assert "initDeckTableUI" in js_text
+        assert "renderCharts" in js_text
 
         text = _write_report(tmp_path).read_text(encoding="utf-8")
         assert ".exp-chip" in text
         assert "function initDeckTableUI" in text
         assert "function sortTable" in text
+        assert "function renderCharts" in text
+        assert "function buildOwnerComboItems" in text
