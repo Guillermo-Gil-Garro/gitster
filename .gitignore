@@ -41,6 +41,9 @@ Thumbs.db
 desktop.ini
 *.bak
 
+# Local working notes
+/HANDOFF.md
+
 # Logs
 *.log
 logcat*.txt
