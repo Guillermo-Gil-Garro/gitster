@@ -796,7 +796,7 @@ def draw_text_card(
             box_top=footer_box_top,
             box_bottom=footer_box_bottom,
             line_gap=owners_gap,
-            vertical_align="bottom",
+            vertical_align="center",
             halo=False,
         )
 
