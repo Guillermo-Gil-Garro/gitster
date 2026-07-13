@@ -35,7 +35,8 @@ PER_SHEET = ROWS * COLS
 TEXT_SIDE_PAD_RATIO = 0.10
 
 # Translucent plate behind the front text (legibility over any background) and
-# the per-player color frame drawn inside the cut line on both faces.
+# the per-player color frame drawn inside the cut line on the song face only:
+# the QR back must stay identical across owners so it cannot be told apart.
 PLATE_MARGIN_X_RATIO = 0.055
 PLATE_BOTTOM_RATIO = 0.035
 PLATE_TOP_RATIO = 0.925
@@ -811,7 +812,6 @@ def draw_qr_card(
     background_reader: ImageReader,
     qr_payload: str,
     qr_cache: dict[str, ImageReader],
-    owner_color: str | None = None,
 ) -> None:
     c.drawImage(background_reader, x, y, w, h, mask="auto")
     qr_size = min(mm_to_pt(QR_MM), min(w, h) * 0.82)
@@ -819,7 +819,6 @@ def draw_qr_card(
     qr_y = y + (h - qr_size) / 2.0
     qr_reader = make_qr_reader(qr_payload, qr_cache)
     c.drawImage(qr_reader, qr_x, qr_y, qr_size, qr_size, mask="auto")
-    draw_owner_frame(c, x=x, y=y, w=w, h=h, owner_color=owner_color)
 
 
 def generate_pdf(
@@ -910,7 +909,6 @@ def generate_pdf(
                     background_reader=back_bg_reader,
                     qr_payload=safe_str(card_row.get("qr_payload")),
                     qr_cache=qr_cache,
-                    owner_color=safe_str(card_row.get("owner_color")) or None,
                 )
 
         draw_cut_grid(

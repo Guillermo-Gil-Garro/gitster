@@ -31,7 +31,7 @@ Comprobación rápida de que todo vive: `gitster --help` debe listar los comando
 ### ¿Ha entrado o salido alguien del grupo?
 
 Edita `pipeline/config/config.json` **antes** de empezar:
-- **Alta**: añade su bloque a `owners` (`owner_id` en minúsculas, `owner_name` como quieres que salga en las cartas, URL de su playlist y un `color` hex libre para su marco).
+- **Alta**: añade su bloque a `owners` (`owner_id` en minúsculas, `owner_name` como quieres que salga en las cartas, URL de su playlist y un `color` hex libre para el marco, que solo se pinta en la cara de la canción; el dorso del QR es idéntico para todos y no lleva marco).
 - **Baja**: borra su bloque. Sus canciones exclusivas dejan de entrar y su nombre desaparece de los pies de las cartas nuevas automáticamente.
 - El tamaño de expansión (`deck.expansion_size`, ahora 40) y los topes de artista/álbum también viven aquí.
 
