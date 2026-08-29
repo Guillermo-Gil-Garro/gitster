@@ -834,27 +834,32 @@
     });
   });
 
-  // Jump + abrir Cheatsheet (botón grande + FAB)
-  function openCheatsheet(){
-    const cs = document.getElementById('cheatsheet');
-    if (!cs) return;
-    closeOthers(cs);
-    setExpanded(cs, true);
-    cs.scrollIntoView({ behavior: smoothBehavior, block: 'start' });
-    history.replaceState(null, '', '#cheatsheet');
+  // Jump + abrir un panel por su id (los botones grandes de arriba y el FAB)
+  const JUMPS = ['cheatsheet', 'host'];
+
+  function openPanel(id){
+    const panel = document.getElementById(id);
+    if (!panel) return;
+    closeOthers(panel);
+    setExpanded(panel, true);
+    panel.scrollIntoView({ behavior: smoothBehavior, block: 'start' });
+    history.replaceState(null, '', '#' + id);
   }
 
-  document.querySelectorAll('a[href="#cheatsheet"]').forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      openCheatsheet();
+  JUMPS.forEach(id => {
+    document.querySelectorAll('a[href="#' + id + '"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPanel(id);
+      });
     });
   });
 
-  // Si se entra con #cheatsheet en la URL, ábrela
-  if (location.hash === '#cheatsheet') {
+  // Si se entra con el hash puesto, ábrelo
+  const landing = location.hash.slice(1);
+  if (JUMPS.includes(landing)) {
     // deja que pinte 1 frame antes de calcular scrollHeight
-    requestAnimationFrame(openCheatsheet);
+    requestAnimationFrame(() => openPanel(landing));
   }
 })();
 </script>
