@@ -58,7 +58,7 @@
       overflow-x:hidden;
     }
 
-    /* Background (Image A) */
+    /* Fondo (Imagen A) */
     .bg{
       position:fixed;
       inset:0;
@@ -151,10 +151,10 @@
     .wrap{
       max-width: var(--max);
       margin: 0 auto;
-      padding: 6px 16px 90px; /* << more compact, keeps content close to the hero */
+      padding: 6px 16px 90px; /* << tighter, pulls the content up to the hero */
     }
 
-        /* HERO (combined image: <strong>Title</strong> + sub<strong>Title</strong>) */
+        /* HERO (imagen combinada: <strong>Título</strong> + sub<strong>Título</strong>) */
     .hero{
       padding: 22px 0 12px;
     }
@@ -176,10 +176,12 @@
       filter: drop-shadow(0 18px 34px rgba(0,0,0,.55));
     }
 
-    /* Big CTA to CHEATSHEET */
+    /* CTA grande a CHEATSHEET */
     .top-cta{
       width:min(var(--max), calc(100% - 28px));
       margin: 10px auto 18px;
+      display:grid;
+      gap:10px;
     }
     .cheat-cta{
       display:flex;
@@ -206,7 +208,7 @@
     .accordion{
       display:grid;
       gap: 14px;
-      margin-top: 10px; /* << stuck to the hero */
+      margin-top: 10px; /* << pegado al hero */
     }
 
     details.panel{
@@ -299,7 +301,7 @@
       border-radius: 16px;
     }
 
-    /* JS-controlled accordion content (robust on iPhone/WebViews) */
+    /* Contenido con acordeón controlado por JS (robusto en iPhone/WebViews) */
     .panel__content{
       padding: 0 18px;
       color: rgba(238,242,255,.96);
@@ -320,7 +322,7 @@
     .mono{font-variant-numeric: tabular-nums}
     .muted{color: var(--muted)}
 
-    /* Pill-style badges (for labels like TIE, LIMIT, etc.) */
+    /* Pill-shaped badges (for labels like TIE, CAP, etc.) */
     .tag{
       display:inline-flex;
       align-items:center;
@@ -341,12 +343,6 @@
     .tag.mag{
       border-color: rgba(255,43,214,.40);
       box-shadow: inset 0 0 0 1px rgba(255,43,214,.16);
-    }
-
-    /* FUCK section <strong>Title</strong> in fuchsia */
-    details#fuck .sum-title .kicker{
-      color: rgba(255,43,214,.95);
-      text-shadow: 0 0 14px rgba(255,43,214,.22);
     }
 
     .callout{
@@ -423,7 +419,7 @@
       .caret, .fab, .panel__content{transition:none !important}
     }
     .subtle{opacity:.78; font-size:.95em;}
-  /* Spacing for action bullets in DJ'S TURN */
+  /* Spacing for action bullets in TURNO DEL DJ */
   #sec-3 .content-inner ul{margin:0 0 .85rem 0;}
   #sec-3 .content-inner ul li{margin:.85rem 0;}
 </style>
@@ -446,12 +442,13 @@
   <main id="contenido" class="wrap">
 
   <div class="top-cta">
-    <a class="cheat-cta" href="#cheatsheet" aria-label="Go to the Cheatsheet">Go to Cheatsheet <span aria-hidden="true">🧠</span></a>
+    <a class="cheat-cta" href="#cheatsheet" aria-label="Go to the Cheatsheet">Cheatsheet <span aria-hidden="true">🧠</span></a>
+    <a class="cheat-cta" href="#host" aria-label="Go to the HOST Manual">HOST Manual <span aria-hidden="true">🎛️</span></a>
   </div>
 
     <section class="accordion" aria-label="GITSTER rules (accordions)">
 
-
+      
 
       <details class="panel" id="que-es">
         <summary aria-label="Open section WHAT IS THIS?">
@@ -461,10 +458,10 @@
         <div class="panel__content">
           <div class="content-inner">
             <p class="lead">
-              <strong>GITSTER</strong> is a spin on the famous put-the-songs-in-chronological-order game, but here the <strong>tokens</strong>
-              set the beat way more 🕺<br/>
-              In this version, <strong>bets</strong> and card <strong>steals</strong> aren't just forgettable featurings,
-              they're the headliner! 💃
+              <strong>GITSTER</strong> is a game built on your own music and your friends' 🪩<br/>
+              The goal is to place every song in the right spot of your timeline (<strong>Timeline</strong>) ⌛<br/>
+              What matters most is knowing <strong>which era</strong> the songs are from, but knowing their
+              <strong>Titles</strong> and <strong>Artists</strong> earns you the <strong>chips</strong> you bet against the other players with 🪙
             </p>
           </div>
         </div>
@@ -478,12 +475,11 @@
         <div class="panel__content">
           <div class="content-inner">
             <ul>
-              <li><strong>The GITSTER app</strong> on every player's phone 📱<br/><span class="muted">One phone is the <strong>HOST</strong> (plays the music and referees), the rest are <strong>controllers</strong></span></li>
-              <li><strong>Spotify Premium</strong> on the HOST's phone <span class="muted">(the only one that needs an account)</span> 🎧</li>
-              <li><strong>One Spotify playlist per player</strong> (public link) 🎶<br/><span class="muted">That's where the discs come from: the bigger and more varied, the better</span></li>
+              <li><strong>The GITSTER app</strong> on every player's phone 📱<br/><span class="muted">One phone acts as the <strong>HOST</strong> (plays the music and referees) and the rest are the other players' <strong>controllers</strong></span></li>
+              <li><strong>Spotify Premium</strong> on the HOST's phone 🎧</li>
+              <li><strong>One Spotify playlist per player</strong> <span class="muted">(that's where the songs come from)</span> 🎶</li>
               <li><strong>A speaker</strong> (optional but recommended) 🔊</li>
             </ul>
-            <p><span class="muted">No cards, no tokens, no deck: <strong>the app handles all of it</strong> 🧮</span></p>
           </div>
         </div>
       </details>
@@ -495,9 +491,9 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p>Build your <strong>Timeline</strong> by placing discs in <strong>CHRONOLOGICAL ORDER</strong> (before/after) ⌛</p>
-            <p>First to <strong>6 discs</strong> —<strong>8</strong> if there are three of you or fewer— with a <strong>2-disc lead</strong> over the runner-up wins <span class="muted">(and if nobody pulls ahead, at 8 or 10 respectively, it's settled by the GRAND FINALE)</span> 🏁</p>
-            <p class="muted">(The <strong>Exact Year</strong> is <strong>NOT</strong> needed to place discs; it's only good for <strong>winning tokens by betting</strong>)</p>
+            <p>Build your timeline (<strong>Timeline</strong>) by placing songs (<strong>records</strong>) in <strong>CHRONOLOGICAL ORDER</strong> (before/after) ⌛</p>
+            <p>The winner is the first to reach <strong>6 records</strong> —<strong>8</strong> if there are three of you or fewer— with a <strong>2-record lead</strong> over the runner-up <span class="muted">(and if nobody pulls ahead, at 8 or 10 respectively the winner is decided in a GRAND FINAL)</span> 🏁</p>
+            <p class="muted">(The <strong>Exact Year</strong> is <strong>NOT</strong> needed to place a record; it only earns you <strong>chips when betting</strong>)</p>
           </div>
         </div>
       </details>
@@ -510,23 +506,13 @@
         <div class="panel__content">
           <div class="content-inner">
             <ul>
-              <li>The HOST opens the <strong>room</strong> and everyone else joins from their phone 🛜<br/>
-                Each player types <strong>their own nickname</strong> and picks <strong>their playlist</strong> from the list 📝</li>
-              <li>The app pools every playlist into <strong>one single bag</strong> of discs and deals:<br/>
-                <strong>1 starting disc</strong> to each Timeline <span class="muted">(from your own playlist whenever it can)</span> 💿<br/>
-                and <strong>3 betting tokens</strong> to each player 🪙🪙🪙</li>
-              <li><strong>DJ'S TIP</strong>: every time your DJ turn comes round you get <strong>1 token</strong>, but only if you arrive with <strong>fewer than 3</strong>, and never on the first round 🪙 <span class="muted">Like collecting as you pass Go, except here only the ones running low get paid ➡️</span></li>
+              <li>The HOST opens the <strong>room</strong> and everybody else joins from their phone 🛜<br/>
+                Each of you types <strong>your nickname</strong> and picks <strong>your playlist</strong> from the list 📝<br/>
+                You can play in teams: several playlists under the <strong>SAME nickname</strong> = <strong>a single team</strong> that pools them all 🤝</li>
+              <li>The app throws every playlist into <strong>one big bag</strong> of songs and deals
+                <strong>1 starting record</strong> to each Timeline 💿
+                and <strong>3 betting chips</strong> to each player 🪙🪙🪙</li>
             </ul>
-
-            <div class="callout mag" role="note" aria-label="TEAMS note in setup">
-              <p><strong style="color: rgba(255,43,214,.95)">TEAMS</strong> – Several playlists under the <strong>SAME nickname</strong> = <strong>one single team</strong> that merges them all 🤝</p>
-            </div>
-
-            <div class="callout" role="note" aria-label="LIMIT note">
-              <p><strong style="color: rgba(34,211,238,.95)">TOKEN LIMIT</strong><br/> <strong>YOU&nbsp;CANNOT&nbsp;HOARD MORE THAN 10 TOKENS!</strong> ⚠️<br/>
-                <span class="muted">You'll soon see that in GITSTER you rack up tokens way faster than usual, so dare to bet and let your inner gambling addict run wild!</span> 🤑
-              </p>
-            </div>
           </div>
         </div>
       </details>
@@ -538,48 +524,48 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p>The app pulls a disc for the DJ <span class="muted">(from the table's playlists; the better you're doing, the harder it gets)</span> and plays it on the HOST. <strong>Nobody sees title, artist or year</strong> 🙈</p>
-            <p>The DJ taps the turntable to listen and decides what to do:</p>
+            <p>The app deals the DJ a record and they decide what to do:</p>
 
             <ul>
-              <li><strong>&nbsp;PLAY IT NORMAL</strong> 🎵<br/>Listen to the song, <strong>drag the disc</strong> into its slot in the Timeline 🕒<br/>and try to guess the <strong><strong>Title</strong></strong> and <strong>Artist(s)</strong> 🎵🎤</li>
+              <li><strong>&nbsp;PLAY IT STRAIGHT</strong> 🎵<br/>Listen to the song, <strong>drag the record</strong> into its slot on the Timeline 🕒<br/>and try to guess the <strong>Title</strong> and <strong>Artist(s)</strong> 🎵🎤</li>
             </ul>
 
             <div class="callout lime" role="note" aria-label="Note THE DJ BETS FOR FREE">
-              <p><strong style="color: rgba(163,230,53,.95)">THE DJ BETS FOR FREE</strong> – Guessing Title and Artist costs the DJ <strong>no tokens at all</strong>: they can only gain 🤑<br/>They say them <strong>out loud</strong> right after placing the disc, before betting opens <span class="muted">(the app nags them so they don't forget) 🎤</span></p>
+              <p><strong style="color: rgba(163,230,53,.95)">THE DJ BETS FOR FREE</strong> – Guessing Title and Artist <strong>costs the DJ no chips at all</strong>: they can only win 🤑<br/>They say them <strong>out loud</strong> right after placing the record, before the betting opens <span class="muted">(the app nudges them so they don't forget) 🎤</span></p>
             </div>
 
-            <div class="callout mag" role="note" aria-label="RHYTHM note">
-              <p><strong style="color: rgba(255,43,214,.95)">RHYTHM</strong> – Listening <strong>UP TO THE CHORUS</strong> (included) is RECOMMENDED, no listening to the whole thing ⏱️</p>
-            </div>
-
-            <ul>
-              <li><strong>&nbsp;REMIX</strong> 🎲<br/>The DJ pays tokens to <strong>discard</strong> the disc and have the app pull another one 🤞</li>
-              <p>Cost per turn (cumulative):<br/>the first remix of the turn costs<br/><strong>1 token</strong>, the second <strong>2</strong>, the third <strong>3</strong>;<br/>and so on 📈</p>
-            </ul>
-
-            <div class="callout mag" role="note" aria-label="Note FORCE REMIX">
-              <p><strong style="color: rgba(255,43,214,.95)">FORCE REMIX</strong> – While the song plays (and <strong>before</strong> the DJ locks their placement), any player can pay <strong>3 tokens</strong> to force a <strong>REMIX</strong> 😈</p>
+            <div class="callout violet" role="note" aria-label="Note KEEP IT MOVING">
+              <p><strong style="color: rgba(167,139,250,.95)">KEEP IT MOVING</strong> – You are ADVISED to listen <strong>UP TO THE CHORUS</strong> (chorus included), but <strong>NOT</strong> to the whole song ⏱️</p>
             </div>
 
             <ul>
-              <li><strong>&nbsp;BUY THE DISC</strong> 💸<br/>By paying <strong>5 tokens</strong>, the DJ skips the turn and the disc is placed automatically in its right spot on the Timeline 🧐</li>
-              <p>On that turn, there will be <strong>NO</strong><br/><strong>BETTING ROUND</strong> 🚫<br/><span class="muted">and the DJ doesn't collect for Title/Artist either</span></p>
+              <li><strong>&nbsp;REMIX</strong> 🎲<br/>The DJ pays chips to <strong>discard</strong> the record and have the app deal another 🤞</li>
+              <p>Cost per turn (cumulative):<br/>the first remix of the turn costs<br/><strong>1 chip</strong>, the second <strong>2</strong>, the third <strong>3</strong>;<br/>and so on 📈</p>
             </ul>
 
-            <div class="callout" role="note" aria-label="LAW OF ADVANTAGE note">
-              <p><strong style="color: rgba(34,211,238,.95)">LAW OF ADVANTAGE I</strong> – The player(s) with the most discs <strong>CANNOT BUY</strong> (but they CAN <strong>REMIX</strong>) ⚖️<br/><span class="muted">Exception: if EVERYONE is tied (round one) there's no advantage to curb, so it is allowed</span></p>
-              <p>And nobody, however they're doing, can <strong>buy the disc that wins them the game</strong>: that one has to be played 🚫</p>
+            <div class="callout mag" role="note" aria-label="Note FORCE A REMIX">
+              <p><strong style="color: rgba(255,43,214,.95)">FORCE A REMIX</strong> – While the song is playing (and <strong>before</strong> the DJ confirms the placement), any player can pay <strong>3 chips</strong> to force a <strong>REMIX</strong> on them 😈</p>
             </div>
 
-            <div class="callout mag" role="note" aria-label="Note STEAL THE DISC">
-              <p><strong style="color: rgba(255,43,214,.95)">STEAL THE DISC</strong> 🦹 – While the song plays (and <strong>before</strong> the listening window closes), any player who does NOT hold the disc can pay <strong>9 tokens</strong> to <strong>take it from the DJ</strong> and chance placing it <strong>in THEIR own Timeline</strong>.</p>
+            <ul>
+              <li><strong>&nbsp;BUY THE RECORD</strong> 💸<br/>By paying <strong>5 chips</strong>, the DJ skips the turn and the record is placed automatically in its right slot on the Timeline 🧐</li>
+              <p>That turn there will be <strong>NO</strong><br/><strong>BETTING ROUND</strong> 🚫<br/><span class="muted">and the DJ won't earn anything for Title or Artist either</span></p>
+            </ul>
+
+            <div class="callout" role="note" aria-label="Note LAW OF ADVANTAGE">
+              <p><strong style="color: rgba(34,211,238,.95)">LAW OF ADVANTAGE I</strong> – Whoever has the most records <strong>CANNOT BUY</strong> unless <strong>ALL</strong> of you are tied; they can still <strong>REMIX</strong> ⚖️</p>
+              <p>And nobody, however they are doing, may <strong>buy the record that wins them the game</strong>: that one has to be played for 🚫</p>
+            </div>
+
+            <div class="callout mag" role="note" aria-label="Note STEAL THE RECORD">
+              <p><strong style="color: rgba(255,43,214,.95)">STEAL THE RECORD</strong> 🦹 – While the song is playing (and <strong>before</strong> the listening closes), any player who does NOT hold the record can pay <strong>9 chips</strong> to <strong>take it off the DJ</strong> and chance placing it <strong>on THEIR own Timeline</strong></p>
               <ul>
-                <li>The thief <strong>can't</strong> be forced to REMIX, but they <strong>can be re-robbed</strong> before they lock their placement (chaining steals). Each steal costs another 9 tokens 🔁</li>
-                <li>The <strong>robbed DJ does NOT lose their guessing turn</strong>: they still score title and artist as usual, even after being robbed 😤</li>
-                <li>On top of that, the DJ (and anyone robbed along the chain) can bet <strong>Chronological Order for FREE</strong> against the thief's placement, in case they slip up. The original DJ has <strong>priority</strong> to reclaim the disc (even if they tap later) 🕒</li>
+                <li>The thief <strong>cannot</strong> be forced to REMIX, but the record <strong>can be stolen back</strong> before they lock their placement (stealing can be chained) 🔁</li>
+                <li>The <strong>robbed DJ does NOT lose their guessing turn</strong>: they can still earn chips for guessing <strong>Title</strong> and <strong>Artist</strong> even after being robbed 😤</li>
               </ul>
             </div>
+
+            <p><strong>DJ'S TIP</strong>: every time it's your turn to DJ and you have <strong>fewer than 3 chips</strong>, we hand you an extra one <del>for passing Go</del></p>
           </div>
         </div>
       </details>
@@ -591,37 +577,32 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p><span class="muted">No more fighting over who said GITSTER first, who shouted the loudest, who gets to be goalkeeper because the ball is theirs and if we don't let them they'll go home and take it with them and blah, blah, blah!</span></p>
-            <p><span class="muted">Here we're <del>gambling addicts</del> civilized players and, as such, we let the app referee</span> 🫡</p>
+            <p>As soon as the DJ places their record, the HOST opens the betting, so stay sharp and get your <strong>reflexes</strong> ready! 🏁</p>
 
-            <p>The moment the DJ places their disc, the HOST opens betting and this is a <strong>RACE</strong> 🏁</p>
-            <p><strong>Nobody owns a category</strong>: bet on whatever you like, but the <strong>order you tap in</strong> is the order you get asked in. No turn order, no counterclockwise, just <strong>reflexes</strong> 🤜</p>
-
+            <p>You can bet on one or on any number of these categories:</p>
             <ul>
-              <li><strong>BET</strong> on <strong>AS MANY</strong> categories as you like:<br/><strong>Title</strong>, <strong>Artist(s)</strong>, <strong>Album</strong> or <strong>Exact Year</strong> (<strong>1 token</strong> each)<br/>or <strong>Chronological Order</strong> (<strong>2 tokens</strong>: winning a disc can't be as cheap as winning a token) 🕒🎵🎤💿📆<br/><span class="muted">Chronological Order means betting the DJ FAILS: YOU pick the slot you think is right (and it has to be a different one from the DJ's)</span><br/><span class="muted">Tokens go <strong>on the table as you tap</strong>, not at the end: that's why the buttons switch off by themselves once you're out of them</span></li>
-              <li><strong>PASS</strong> 🤷‍♀️</li>
+              <li><strong>Chronological Order</strong> 🕒<br/>Costs <strong>2 chips</strong> and it means betting that the DJ <strong>GOT IT WRONG</strong> when placing the record on their Timeline: <strong>YOU</strong> get to pick the slot you think is right</li>
+              <li><strong>Title</strong> 🎵<br/>You stake one chip (<strong>double or nothing</strong>) on knowing the song's title</li>
+              <li><strong>Artist(s)</strong> 🎤<br/>Same for the song's artist, except that if you know a <strong>featuring</strong> you can win <strong>2 chips</strong> (triple or nothing baby). Mind you: if you go for the featured artists and miss even one, you lose the chip you staked</li>
+              <li><strong>Album</strong> 💿<br/>You stake one chip (<strong>double or nothing</strong>) on knowing the song's album</li>
+              <li><strong>Year</strong> 📆<br/>You stake one chip (<strong>triple or nothing</strong>) on knowing the song's exact year</li>
+              <li>You can also <strong>PASS</strong> and bet on nothing 🤷‍♀️</li>
             </ul>
+            <p>Obviously, every bet has to be different from whatever the DJ said or whatever a player who bet before you said</p>
+            <p>You can <strong>change your mind</strong> while the betting round is still open by tapping again the button of the bet you regret 🔄</p>
 
-            <p>You can <strong>change your mind</strong> while the round is still open: <strong>tapping your category again drops you out of the queue</strong>, but tapping it once more puts you back in <strong>last</strong> 🔄</p>
-
-            <div class="callout mag" role="note" aria-label="THE QUEUE note">
-              <p><strong style="color: rgba(255,43,214,.95)">THE QUEUE</strong> – Each category is asked <strong>in tap order</strong>. The first one answers; if they're <strong>right</strong>, they collect and <strong>everyone behind them gets their token back</strong> without ever answering 😌; if they're <strong>wrong</strong>, their token is lost and it's the next one's turn 🎤</p>
-              <p>Which is why joining last <strong>isn't throwing a token away</strong>: most of the time you never get asked and you get it straight back. What you pay for is <strong>being wrong</strong>, not <strong>betting</strong> ☝️</p>
-              <p><strong>25 seconds</strong> to make up your mind ⏱️ Anyone who hasn't bet or passed when the clock hits zero <strong>gets passed automatically</strong> <span class="muted">(with a heads-up on the phone at 5 seconds left)</span> 😬</p>
+            <div class="callout violet" role="note" aria-label="Note BETTING ORDER">
+              <p><strong style="color: rgba(167,139,250,.95)">BETTING ORDER</strong> – Several players can bet on the <strong>same category</strong> and they get their shot at guessing <strong>in the order they tapped</strong> the betting button, so speed is everything! 🏁</p>
+              <p>If somebody takes the bet off you because they guessed first <span class="muted">(as in: «aw, I was about to say that title»)</span>, the HOST will <strong>give you your chip back</strong>. What costs you is <strong>getting it wrong</strong>, not <strong>betting</strong> ☝️😌</p>
             </div>
 
-            <div class="callout" role="note" aria-label="VARIOUS ARTISTS note">
-              <p><strong style="color: rgba(34,211,238,.95)">VARIOUS ARTISTS</strong> – When betting on <strong>Artist(s)</strong>, you can name one or several (to steal token-winning chances from the players who go after you) 🖕; but if you name several artists <strong>AND GET AT LEAST ONE WRONG, YOU LOSE THE BET</strong> ☠️</p>
-              <p><span class="muted">Getting the main artist right pays <strong>+1</strong>; getting a <strong>feat</strong> or guest right pays <strong>+2</strong> (that one's harder)</span></p>
+            <div class="callout rose" role="note" aria-label="Note CHIP LIMIT">
+              <p><strong style="color: rgba(251,113,133,.95)">CHIP LIMIT</strong> – <strong>YOU&nbsp;CANNOT&nbsp;HOLD MORE THAN 10 CHIPS!</strong> ⚠️<br/>
+                <span class="muted">Once you hit the cap, the app warns you: «😱 CAP 10/10 · any chips you were about to win are LOST 😤 · Force a remix, steal or buy records! 🔥»</span></p>
             </div>
 
-            <div class="callout mag" role="note" aria-label="LAW OF ADVANTAGE II note, this time it's personal">
-              <p><strong style="color: rgba(255,43,214,.95)">LAW OF ADVANTAGE II, this time it's personal</strong> – The player(s) with the most discs <strong>ALSO CANNOT BET ON CHRONOLOGICAL ORDER</strong> ⚖️<br/><span class="muted">Same exception: if EVERYONE is tied, it's allowed</span></p>
-            </div>
-
-            <div class="callout violet" role="note" aria-label="SAY IT OUT LOUD note">
-              <p><strong style="color: rgba(167,139,250,.95)">SAY IT OUT LOUD!</strong> – Claiming the category on your phone <strong>is not betting</strong>: you have to <strong>say your answer</strong> before the disc is revealed 🗣️<br/><span class="muted">Title, Artist, Album and Year are called out and the HOST judges them, category by category and in queue order. That's why the HOST is the one who closes betting, once everybody has sung theirs</span></p>
-              <p>The <strong>Chronological Order slot is pointed out AFTER betting closes</strong>, not when you tap it 🕒<br/><span class="muted">In queue order too, one at a time and in full view: the second player picks knowing where the first one went, and no slot can be taken twice. If yours is gone, you pull out at no cost</span></p>
+            <div class="callout" role="note" aria-label="Note LAW OF ADVANTAGE II, now it is personal">
+              <p><strong style="color: rgba(34,211,238,.95)">LAW OF ADVANTAGE II, now it's personal</strong> – Whoever is in the lead (has the most records) <strong>CANNOT BET ON CHRONOLOGICAL ORDER EITHER</strong>, unless all of you are tied ⚖️</p>
             </div>
 
           </div>
@@ -635,63 +616,56 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p>Once everybody has bet (and called out their answer), the HOST closes betting and the disc is revealed:</p>
+            <p>Once everybody has called out their bets, the HOST reveals the record:</p>
             <ul>
-              <li>If the DJ placed it right in their Timeline, they keep it 👍</li>
-              <li>Otherwise, it's discarded, <strong>unless</strong> someone bet on <strong><strong>Chronological Order</strong></strong> and got it right, in which case they place it in their own Timeline 🎉</li>
+              <li>If the DJ (or the thief) placed it right on the Timeline, they keep it 👍</li>
+              <li>Otherwise it is discarded, <strong>unless</strong> somebody bet on <strong>Chronological Order</strong> and got it right, in which case they place it on their own Timeline 🎉</li>
             </ul>
 
-            <p>Next the app hands out the tokens (starting with the DJ):</p>
+            <p>The app then hands out the chips (starting with the DJ):</p>
 
             <ul>
-              <li>For the DJ, <strong>as long as they placed the disc right in their Timeline</strong> (otherwise, they collect NOTHING):
+              <li>For the DJ, <strong>as long as they placed the record right on their Timeline</strong> (otherwise they earn NOTHING):
                 <ul>
                   <li><strong>Title</strong>: <strong>+1</strong> 🙂</li>
-                  <li><strong>Artist</strong>, main: <strong>+1</strong> · <strong>Featuring</strong>: <strong>+2</strong> 😊</li>
+                  <li>Lead <strong>Artist</strong>: <strong>+1</strong> · <strong>Featuring</strong>: <strong>+2</strong> 😊</li>
                 </ul>
               </li>
-              <li>For the rest of the players (bets against the house):
+              <li>For everybody else (bets against the house):
                 <ul>
-                  <li><strong><strong>Title</strong></strong>: <strong>+1</strong> 🙂</li>
-                  <li><strong><strong>Artist</strong></strong>: main <strong>+1</strong> · Featuring <strong>: +2</strong> 😊</li>
-                  <li><strong><strong>Album</strong></strong>: <strong>+1</strong> 🙂</li>
-                  <li><strong><strong>Exact Year</strong></strong>: <strong>+2</strong> 🤩🥳</li>
-                  <li><strong>Chronological Order</strong>: if the DJ fails and your placement was right, <strong>you take the disc</strong> 🎉; if you were BOTH right, <strong>PLATINUM RECORD</strong> (see below) 💿💿; in any other case you lose your <strong>2 tokens</strong> and get nothing ☠️</li>
-                  <li>If you lost your Title/Artist/Album/Year bet, your token is lost (<strong>-1</strong>) 😭</li>
-                  <li>If you <strong>never got asked</strong> because someone ahead of you nailed it, <strong>you get your token back</strong> and stay exactly as you were (<strong>0</strong>) 😐</li>
-                  <li>If you passed (didn't bet), you're a chicken and you stay as you are 💩</li>
+                  <li><strong>Chronological Order</strong>: if the DJ gets it wrong and you placed it right, <strong>you take the record</strong> 🎉; if you both get it right, <strong>PLATINUM RECORD</strong> (see below) 💿; in any other case you lose your <strong>2 chips</strong> and take nothing ☠️</li>
+                  <li><strong>Title</strong>: <strong>+1</strong> 🙂</li>
+                  <li><strong>Artist</strong>: lead <strong>+1</strong> · Featuring <strong>+2</strong> 😊</li>
+                  <li><strong>Album</strong>: <strong>+1</strong> 🙂</li>
+                  <li><strong>Exact Year</strong>: <strong>+2</strong> 🤩🥳</li>
+                  <li>If you got your Title/Artist/Album/Year bet wrong, your chip is gone (<strong>-1</strong>) 😭</li>
+                  <li>If you <strong>never got to answer</strong> because somebody ahead of you got it right, <strong>you get your chip back</strong> and break even (<strong>0</strong>) 😐</li>
+                  <li>If you passed (you did not bet), you are a chicken and you break even 💩</li>
                 </ul>
               </li>
             </ul>
 
-<div class="callout" role="note" aria-label="TITLE-ITIS note">
-              <p><strong style="color: rgba(34,211,238,.95)">TITLE-ITIS</strong> – For a <strong>Title</strong> bet to count, you have to say it <strong>(almost) PERFECTLY</strong>, with its articles, its tiny little words and all ☝️🤓<br/>The only thing you're allowed to skip are the "subtitles" in parentheses<br/>E.g.: For <strong>Blue (Da Ba Dee)</strong>,<br/>by Eiffel 65, <strong>"Blue"</strong> is enough<br/><span class="muted">(but who on earth says just "Blue" for Blue (Da Ba Dee)?!)</span> </p>
+            <div class="callout rose" role="note" aria-label="Note TITLE-ITIS">
+              <p><strong style="color: rgba(251,113,133,.95)">TITLE-ITIS</strong> – For a <strong>Title</strong> bet to count, you have to say it <strong>(almost) PERFECTLY</strong>, articles, little words and all ☝️🤓<br/>The only thing you are allowed to skip are the "subtitles" in brackets<br/>E.g.: for <strong>Blue (Da Ba Dee)</strong>, by Eiffel 65, <strong>"Blue"</strong> will do <span class="muted">(but who on earth says just "Blue" for Blue (Da Ba Dee)?!)</span></p>
             </div>
 
-            <div class="callout mag" role="note" aria-label="MAIN <strong>Artist</strong>S note">
-              <p><strong style="color: rgba(255,43,214,.95)">MAIN ARTIST OR FEAT?</strong> <br/>Getting the <strong>main</strong> artist right pays <strong>+1</strong>; getting a <strong>feat</strong> or guest right pays <strong>+2</strong> 🙈🙉🙊<br/><strong>Artist is ONE single bet</strong>: go for the guests and miss one and it's <strong>+2 or NOTHING</strong> — you don't even collect the <strong>+1</strong> for the main artist you did get right ☠️<br/><span class="muted">Goes for the DJ and for bettors alike: name the feats and you're all in</span></p>
+            <div class="callout rose" role="note" aria-label="Note LEAD ARTIST OR FEAT">
+              <p><strong style="color: rgba(251,113,133,.95)">LEAD ARTIST OR FEAT?</strong> – Getting the <strong>lead</strong> right pays <strong>+1</strong>; getting a <strong>feat</strong> or guest right pays <strong>+2</strong> 🙈🙉🙊<br/><strong>The artist is ONE single bet</strong>: if you go for the featured names and miss one, <strong>YOU LOSE YOUR CHIP</strong> — you do not even get the +1 for the lead you had right ☠️<br/><span class="muted">Goes for the DJ and for the bettors alike: whoever wades into the feats, wades in all the way</span></p>
             </div>
 
-            <div class="callout lime" role="note" aria-label="THE ALBUM note">
-              <p><strong style="color: rgba(163,230,53,.95)">THE ALBUM</strong> 💿 – Naming the <strong>record</strong> the song comes from pays <strong>+1</strong>, same as the Title. The app judges it and shows the album name at the reveal <span class="muted">(whatever Spotify says: if the song shipped on a compilation or a reissue, that's the one that counts)</span> ☝️</p>
-              <p><span class="muted">A playlist imported a long time ago may not carry album names: when that happens the app simply <strong>doesn't offer the bet</strong> that turn. Re-import it and it's back</span> 🔄</p>
-
-            </div>
-
-            <div class="callout" role="note" aria-label="PLATINUM RECORD note">
-              <p><strong style="color: rgba(34,211,238,.95)">PLATINUM RECORD 💿💿</strong> (you were both right)</p>
-              <p>If the song's year <strong>TIES</strong> a year already in the Timeline, there are <strong>TWO valid slots</strong> (right before and right after that year) 🤯</p>
-              <p><span class="muted">E.g.: the Timeline has …2016, <strong>2019</strong>, 2026… and a <strong>2019</strong> song comes up: it fits between 2016 and 2019, and also between 2019 and 2026</span></p>
-              <p>If the DJ placed it in one and you bet <strong>Chronological Order</strong> on the other, <strong>nobody was wrong</strong>: the disc <strong>goes onto both Timelines</strong> 💥</p>
+            <div class="callout lime" role="note" aria-label="Note PLATINUM RECORD">
+              <p><strong style="color: rgba(163,230,53,.95)">PLATINUM RECORD 💿</strong> (you both got it right)</p>
+              <p>If the song's year <strong>TIES</strong> with one already on the Timeline, there are <strong>TWO valid slots</strong> (right before and right after that year) 🤯</p>
+              <p><span class="muted">E.g.: the Timeline reads …2016, <strong>2019</strong>, 2026… and a song from <strong>2019</strong> comes up: between 2016 and 2019 works, and so does between 2019 and 2026</span></p>
+              <p>If the DJ (or the thief) placed it in one and you bet <strong>Chronological Order</strong> on the other, <strong>nobody got it wrong</strong>: the record <strong>goes onto both Timelines</strong> 💥</p>
               <ul>
-                <li>The DJ (or the thief) <strong>keeps their disc</strong> 👍</li>
-                <li>You place <strong>a copy</strong> in your own Timeline 🎉</li>
-                <li>The copy <strong>is paid for with your bet</strong>: you leave your <strong>2 tokens</strong> 🪙</li>
+                <li>The DJ (or the thief) <strong>keeps their record</strong> 👍</li>
+                <li>You place <strong>a copy</strong> on your own Timeline 🎉</li>
+                <li>You <strong>pay for the copy with your bet</strong>: your <strong>2 chips</strong> stay on the table 🪙</li>
               </ul>
-              <p><span class="muted">Same deal when a <strong>thief</strong> is the one placing: if they get it right and someone names the other valid slot, that's a copy (first by priority)</span></p>
             </div>
 
-            <div class="big-reminder">REMEMBER THE MAXIMUM LIMIT OF 10 TOKENS!</div>
+            <div class="big-reminder">REMEMBER THE 10-CHIP CAP!</div>
           </div>
         </div>
       </details>
@@ -702,20 +676,19 @@
           <span class="caret" aria-hidden="true">▾</span>
         </summary>
         <div class="panel__content">
-          <div class="content-inner">
-            <p>Reaching <strong>10 discs</strong> is not enough: you have to get there <strong>clearly ahead</strong> 🙅‍♂️</p>
+          <div class="content-inner">            
+            <p>At the end of every <strong>ROUND</strong> <span class="muted">(when the turn comes back to whoever opened the game and every DJ has spun the same number of times ↩️)</span>, the app checks who has won:</p>
             <ul>
-              <li>The app checks it <strong>at the end of every ROUND</strong>, never mid-way: a round is a <strong>full lap</strong>, until the turn comes back to whoever opened the game ↩️<br/><span class="muted">That way every DJ will have played the same number of times and nobody is left without their shot</span></li>
-              <li>With <strong>6 discs or more</strong> —<strong>8</strong> if there are three of you or fewer— and a <strong>lead of ≥ 2</strong> over the runner-up, you win right there <br/><span class="muted">(6–4, 7–5…)</span> 🎾</li>
-              <li>Without that lead, <strong>another round</strong> 🔁</li>
-              <li>The moment someone hits <strong>8 discs</strong> —<strong>10</strong> if there are three of you or fewer—, that is the <strong>last normal round</strong>: next comes the GRAND FINALE 🕺</li>
+              <li>With <strong>6 records or more</strong> —<strong>8</strong> if there are three of you or fewer— and a <strong>lead of ≥ 2</strong> over the runner-up, it's won right there <span class="muted">(6–4, 7–5…)</span> 🎾</li>
+              <li>If that lead isn't there, <strong>another round</strong> 🔁</li>
+              <li>As soon as somebody reaches <strong>8 records</strong> —<strong>10</strong> if there are three of you or fewer—, that is the <strong>last normal round</strong>: what comes next is the GRAND FINAL 🪩</li>
             </ul>
 
-            <div class="callout amber" role="note" aria-label="GRAND FINALE note">
-              <p><strong style="color: rgba(245,158,11,.95)">GRAND FINALE: DANCE-OFF</strong> – <strong>Everyone who reached 10 discs</strong> qualifies 🕺💃<br/>
-              Five <strong>songs</strong> come up with title and artist, <strong>no audio</strong>, and you get <strong>50 seconds</strong> to order them by year on your phone ⏱️<br/>
-              <span class="muted">Whoever gets more <strong>comparisons</strong> right (out of 10) wins, and if you tie, whoever settled first</span><br/>
-              <strong>The dance-off beats the disc count</strong>: whoever wins it wins the game 👑</p>
+            <div class="callout amber" role="note" aria-label="Note GRAND FINAL">
+              <p><strong style="color: rgba(245,158,11,.95)">GRAND FINAL</strong> – Everybody <strong>on the winning line</strong> qualifies —<strong>6</strong> records, or <strong>8</strong> if there are three of you or fewer— 🪩<br/>
+              <strong>5 songs</strong> come up with their title and artist, <strong>without playing</strong>, and you get <strong>50 seconds</strong> to order them by year on your phone ⏱️<br/>
+              <span class="muted">The winner is whoever gets the most <strong>pairings</strong> right (out of the 10 possible) and, if you tie, whoever locked it in first</span><br/>
+              <strong>The grand final outranks the records</strong>: whoever wins it, wins the game 👑</p>
             </div>
           </div>
         </div>
@@ -729,110 +702,66 @@
         <div class="panel__content">
           <div class="content-inner">
             <ul>
-  <li>The app draws the first DJ: newcomer → worst in the ranking → at random 🎲</li>
-  <li>Starting tokens: <span class="mono">3</span> 🪙🪙🪙</li>
-  <li>Payday: <span class="mono">+1</span> token every time your DJ turn comes round, except the first 🪙</li>
-  <li>Token limit: <span class="mono">10</span> ⚠️</li>
-  <li>You can listen to the song up to the chorus (included)<br/><span class="muted">If there's no chorus: 1 minute</span> ⏳</li>
-  <li><strong>Remix</strong>: 1st costs <span class="mono">1</span>, 2nd costs <span class="mono">2</span>, 3rd costs <span class="mono">3</span>… (in the same turn) 🎲</li>
-  <li><strong>Buy the disc</strong>: costs <span class="mono">5</span> tokens <strong>AND ONLY IF YOU'RE NOT IN THE LEAD</strong> 💸<br/><span class="muted">No betting that turn, and the DJ collects nothing for Title/Artist</span></li>
-  <li>The DJ guesses Title/Artist <strong>FOR FREE</strong>: they can only gain 🤑<br/><span class="muted">The Exact Year is no longer the DJ's to guess: it's for bettors only</span></li>
-  <li>Betting is a <strong>RACE</strong>: bet on whatever you like, and tap order is answer order 🏁<br/><span class="muted">Title/Artist/Album: <span class="mono">1</span> token, pays <span class="mono">+1</span> · Exact Year: <span class="mono">1</span> token, pays <span class="mono">+2</span> (missing costs <span class="mono">-1</span>) · Chronological Order: <span class="mono">2</span> tokens (you bet the DJ FAILS)<br/>If the one ahead of you nails it, you neither answer nor pay · if you're in the lead or tied at the top, you CANNOT BET on Chronological Order</span> ⚖️</li>
-  <li>Claiming isn't betting: you must <strong>say your answer out loud</strong> before the reveal 🗣️</li>
-  <li><strong>25 seconds</strong> to bet: at zero, anyone who hasn't moved gets passed ⏱️</li>
-  <li><strong>FORCE REMIX</strong> (screw the DJ): while the song plays (before they lock their placement), pay <span class="mono">3</span> tokens to force a free <strong>REMIX</strong> (only <span class="mono">2</span> if they lead 👑) 😈<br/><span class="muted">For when you can tell they know the song; the new song can be screwed again</span></li>
-  <li><strong>STEAL THE DISC</strong>: while it plays (before the listening closes), pay <span class="mono">9</span> tokens (<span class="mono">7</span> if they lead 👑) to take the song from the DJ and place it in <strong>YOUR</strong> Timeline 🦹<br/><span class="muted">The thief can't be forced to REMIX but can be re-robbed; if they place it right they keep the disc; the robbed DJ still guesses title and artist, and bets Chronological Order for FREE (with priority) to reclaim it if the thief slips up</span></li>
-  <li><strong>PLATINUM RECORD</strong>: if the year ties and you both nail a valid slot, the disc duplicates 💿💿<br/><span class="muted">The placer keeps theirs, you place a copy and leave your 2 tokens</span></li>
-  <li>If you get (at least) one artist wrong, you lose the <strong>Artist(s)</strong> bet ☠️</li>
-  <li>You win with <span class="mono">6</span>+ discs and a <strong>lead ≥ 2</strong>, checked <strong>at the end of every ROUND</strong> (full lap) ↩️<br/><span class="muted">With <strong>three players or fewer</strong> the line goes up to <span class="mono">8</span>, because less table passes between one of your discs and the next. Once someone hits <span class="mono">8</span> (or <span class="mono">10</span>), that round is the last: it's settled by the <strong>GRAND FINALE: DANCE-OFF</strong> between everyone on the line 🕺</span></li>
+  <li>Starting chips: <span class="mono">3</span> 🪙🪙🪙</li>
+  <li>Extra pay: <span class="mono">+1</span> chip every time it's your turn to DJ, if you get there with fewer than <span class="mono">3</span> 🪙</li>
+  <li>Chip cap: <span class="mono">10</span> ⚠️</li>
+  <li><strong>Remix</strong>: 1st costs <span class="mono">1</span>, 2nd costs <span class="mono">2</span>, 3rd costs <span class="mono">3</span>… (within the same turn) 🎲</li>
+  <li><strong>Buy the record</strong>: costs <span class="mono">5</span> chips <strong>AND ONLY IF YOU ARE NOT IN THE LEAD</strong> 💸<br/><span class="muted">No betting that turn and the DJ earns nothing for Title/Artist</span></li>
+  <li><strong>FORCE A REMIX</strong> (mess with the DJ): while the song plays (before they confirm the placement), pay <span class="mono">3</span> chips to force a <strong>REMIX</strong> on them 😈</li>
+  <li><strong>STEAL THE RECORD</strong>: while the song plays (before the listening closes), pay <span class="mono">9</span> chips to take the song off the DJ and place it on <strong>YOUR</strong> Timeline 🦹</li>
+  <li>The DJ guesses Title/Artist <strong>FOR FREE</strong>: they can only win 🤑</li>
+  <li>Betting is a <strong>RACE</strong>: bet on whatever you like, and the order you tap is the order you answer in 🏁<br/><span class="muted">Title/Artist/Album: <span class="mono">1</span> chip, pays <span class="mono">+1</span> · Exact Year: <span class="mono">1</span> chip, pays <span class="mono">+2</span> (getting it wrong costs <span class="mono">-1</span>) · Chronological Order: <span class="mono">2</span> chips (betting that the DJ GETS IT WRONG). If the one ahead of you gets it right, you neither answer nor pay · if you are in the lead or tied at the top, you CANNOT BET on Chronological Order</span> ⚖️</li>
+  <li>If you miss (at least) one artist, you lose the <strong>Artist(s)</strong> bet ☠️</li>
+  <li><strong>PLATINUM RECORD</strong>: if the year ties and you both get the two valid slots right, the record is doubled 💿💿</li>
+  <li>You win with <span class="mono">6</span>+ records and a <strong>lead of ≥ 2</strong>, checked <strong>at the end of every ROUND</strong> (a full lap) ↩️<br/><span class="muted">With <strong>three players or fewer</strong> the line rises to <span class="mono">8</span>. Once somebody hits <span class="mono">8</span> (or <span class="mono">10</span>), that round is the last one: it is settled by the <strong>GRAND FINAL</strong> between everybody on the line (≥ 6 or ≥ 8 respectively) 🪩</span></li>
 </ul>
           </div>
         </div>
       </details>
 
 
-      <details class="panel" id="fuck">
-        <summary aria-label="Open section FUCK (Frequently Usked CKuestions)">
-          <span class="sum-title"><span class="kicker">FUCK (Frequently Usked CKuestions) 🙋‍♂️🤔🙋‍♀️</span></span>
+      <details id="host" class="panel featured">
+        <summary aria-label="Open section HOST MANUAL">
+          <span class="sum-title"><span class="kicker">HOST MANUAL 🎛️</span></span>
           <span class="caret" aria-hidden="true">▾</span>
         </summary>
         <div class="panel__content">
-          <div class="content-inner faq">
+          <div class="content-inner">
+            <p>The HOST does more than play the music: <strong>they are the referee</strong>. This is what only they can and must do 🫡</p>
 
+            <ul>
+              <li><strong>The music is driven by the DJ from their own phone</strong> 🎧<br/>Play, pause, <strong>⏮ Replay</strong> and <strong>+10s</strong> show up on the DJ's controller, but they play out of the HOST's phone — so if you have a speaker, that is the one to connect 🔊</li>
+              <li><strong>⭐ There is a button</strong> that takes any player to that song in their own Spotify, in case they want to add it to their playlist 🎧 When somebody opens the song in Spotify from their phone, their name shows up <strong>in amber</strong> next to the Spotify logo on the HOST's screen, for as long as that song keeps playing. Since they have seen the title and the artist, <strong>they should not collect on any bet that round</strong>. The app does not stop them, it only tells on them — the one who has to referee it is the HOST</li>
+              <li><strong>🔒 Close the betting</strong> once everybody has bet or passed</li>
+              <li><strong>👀 Keep an ear on the bets</strong> – When the DJ has to guess Title and Artist, and when the players have to call out their bets <span class="muted">(the app prompts at each of those moments)</span>, the HOST has to pay attention to know who gets paid and not to reveal the record too early. You ask <strong>one at a time and in the order the app sets</strong></li>
+              <li><strong>🎞️ Reveal the record</strong> once every bet has been called out, <strong>NOT BEFORE</strong></li>
+            </ul>
 
-            <div class="callout mag" role="note" aria-label="FAQ Players and teams">
-              <h4>How many players is it for? Can you play in teams?</h4>
-              <p>GITSTER is a game designed for <strong>4–7 players</strong> 🚶‍♂️🚶‍♀️🚶🚶‍♂️+🚶‍♀️🚶🚶‍♂️</p>
-              <p>But relax, Mister Sociable 😎 / Miss Popularity 👸, if you are<br/><strong>8 or more players, you can play</strong><br/><strong>in teams</strong>, though you'll have to agree on the Timeline and Betting decisions together 🤝</p>
-              <p>In the app it's straightforward: <strong>several playlists under the same nickname</strong> = one single team, and their songs get merged 🤝</p>
+            <div class="callout violet" role="note" aria-label="Note THE BET PAYOUT BUTTONS">
+              <p><strong style="color: rgba(167,139,250,.95)">THE BET PAYOUT BUTTONS</strong> – The reveal has <strong>two pages</strong>, flipped with the ← → arrows 💰</p>
+              <p><strong>Page 1, the DJ.</strong> <strong>Title</strong>: ✗ or <strong>✓ (+1 🪙)</strong>. <strong>Artist</strong>: tap to cycle ✗ → <strong>✓ Lead (+1 🪙)</strong> → <strong>✓ Featuring (+2 🪙)</strong></p>
+              <p><strong>Page 2, the bettors</strong>, grouped by category and numbered by queue order. Each button cycles:</p>
               <ul>
-                <li>8 players = 4 pairs 🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑</li>
-                <li>9 players = 3 trios 👪👪👪 or 3 pairs + 1 trio 🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑👪</li>
-                <li>10 players = 5 pairs 🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑🧑‍🤝‍🧑</li>
-                <li>11 players = 3 trios + 1 pair 👪👪👪🧑‍🤝‍🧑</li>
-                <li>12 players = 4 trios 👪👪👪👪</li>
+                <li><strong>0 🪙</strong> – never got to answer because somebody ahead got it right: neither paid nor charged <span class="muted">(chip comes back)</span></li>
+                <li><strong>✗ -1 🪙</strong> – answered and got it wrong: chip is gone</li>
+                <li><strong>✓ +1 🪙</strong> – got it right, collects 1 chip</li>
+                <li><strong>✓ +2 🪙</strong> – on Artist <span class="muted">(if they got the Featuring AND THE LEAD ARTIST right)</span> and on Exact Year</li>
               </ul>
-              <p><span class="muted">And we won't give you more examples because we think you've got it (and because we know nobody has more than 12 friends, don't flatter yourselves)</span></p>
+              <p><span class="muted">Green pays out, red charges, dimmed hands the chip back</span> 🚦</p>
             </div>
 
-            <div class="callout" role="note" aria-label="FAQ Token limit excess">
-              <h4>📜 Why do the “Laws of Advantage” exist? (why nerf the player who's winning?)</h4>
-              <p>Most of the game's additional rules (the ones in fuchsia and blue boxes) are designed to <strong>balance the game and prevent exploits</strong> ⚙️</p>
-                <ul>
-                  <li>For example, the player(s) in the lead can't buy discs to <strong>prevent a SNOWBALL effect</strong> (the ones winning pulling even further ahead of the ones losing) 🦾⛄️</li>
-                  <li>Likewise, the leader(s) can't bet on Chronological Order: that's the bet that <strong>steals discs</strong>, and whoever is already ahead doesn't need to steal discs from anyone to keep winning 💪💪</li>
-                </ul>
-              <p><span class="muted">In the end it's about giving everyone <strong>equal opportunities</strong> to make the game <strong>more competitive</strong> and, therefore, <strong>more fun</strong></span> 🤪</p>
+            <div class="callout lime" role="note" aria-label="Note FIXING THE YEAR">
+              <p><strong style="color: rgba(163,230,53,.95)">FIXING THE YEAR</strong> ✏️ – The reveal has a field reading <strong>«Year (fix it if it's wrong)»</strong>. Spotify gets reissues and compilations wrong all the time, and <strong>curating the years is the HOST's job</strong> 🧐</p>
+              <p>Whatever you type there <strong>overrides what Spotify says</strong>, both for the round being played and for later games</p>
             </div>
 
-            <div class="callout violet" role="note" aria-label="FAQ Rewind and replay">
-              <h4>🎧 Can you rewind or replay the song?</h4>
-              <p>The DJ has <strong>⏮ Replay</strong> and <strong>+10s</strong> on their screen, so technically yes ⏪⏩</p>
-              <p><span class="muted">But the chorus limit still stands: replaying the same bit, fine; listening to the whole song hunting for the clue, no 🙅‍♂️</span></p>
-            </div>
+            <ul>
+              <li><strong>Resolve turn</strong> pays out everything you marked and <strong>Next turn ▶</strong> moves on to the next DJ</li>
+              <li><strong>⬅ Back (fix the bets)</strong> undoes the resolution if you judged something wrong, <strong>as long as you have not moved on</strong> ↩️</li>
+              <li><strong>🔄 Restart</strong> throws the whole turn away and sends the DJ back to their decision with a fresh song <span class="muted">(for when a turn really goes off the rails)</span></li>
+            </ul>
 
-            <div class="callout rose" role="note" aria-label="FAQ Hints while listening">
-              <h4>🗣️ Can you talk during the listening or give hints?</h4>
-              <p>You can talk and trash-talk, but <strong>no direct hints</strong> 🤫<br/>You can <strong>NOT</strong> <strong>shout to screw people over</strong> and keep them from hearing the song 🤐</p>
-            </div>
-
-            <div class="callout" role="note" aria-label="FAQ Updating the app">
-              <h4>📲 How does the app update?</h4>
-              <p>On its own: if there's a new version, a banner shows up at the top when you open it to <strong>download and install</strong> ⬆️</p>
-              <p><span class="muted">The playlists you already have saved <strong>are not lost</strong> when you update</span> 💾</p>
-            </div>
-
-            <div class="callout amber" role="note" aria-label="FAQ Buy disc">
-              <h4>💸 Buying the disc (5 tokens)</h4>
-              <p><strong>When can I buy it?</strong> Whenever you want (no need to wait for the chorus) ⚡️</p>
-              <h4>🤔 If I buy, can I win tokens for Title/Artist?</h4>
-              <p>No: if you buy, you <strong>collect no tokens</strong> that turn 🙅‍♀️</p>
-              <h4>🏁 Can I buy the disc that wins me the game?</h4>
-              <p>No. That one you have to <strong>play for</strong> 🚫</p>
-            </div>
-
-            <div class="callout lime" role="note" aria-label="FAQ Remix after listening">
-              <h4>🎲 Can I REMIX even if I've already listened to the song?</h4>
-              <p>Yes, but try to keep the game moving 🥱</p>
-              <p>If you can tell <strong>you have no clue about the song</strong> from the start, remix fast, spending a token is no big deal <span class="muted">(and I doubt Our Lady of the Remix will suddenly appear to you and reveal what year the song is from)</span> 😂</p>
-            </div>
-
-            <div class="callout mag" role="note" aria-label="FAQ Disputes">
-              <h4>⚔️ Disputes (“almost perfect” title, main vs feat, etc.)</h4>
-              <p>Decided by a <strong>quick vote</strong> by show of hands<br/>(majority rules) 🙋‍♀️🗳️🙋‍♂️</p>
-              <p>If there's a <strong>tie</strong>: it counts as valid 🤷‍♂️</p>
-            </div>
-
-            <div class="callout" role="note" aria-label="FAQ No clear chorus">
-              <h4>⏱️ What if the song has no clear chorus?</h4>
-              <p>You listen for a max of <strong>1 minute</strong> (<del>someday</del> the app will cut it off automatically) ✋</p>
-            </div>
-
-            <div class="callout violet" role="note" aria-label="FAQ Token limit excess">
-              <h4>🔟 What if I'm at 10 tokens and I'm owed more?</h4>
-              <p>You stay at <strong>10</strong> 🥲<br/>The excess is lost 🙏<br/><span class="muted">In general, when in doubt, remember: <strong>TOUGH LUCK, KEEP DANCING</strong></span> 💃</p>
-            </div>
-
+            <div class="big-reminder">Remember: with great power comes great responsibility</div>
           </div>
         </div>
       </details>
@@ -865,10 +794,10 @@
     if (expanded) {
       d.open = true;
       d.classList.add('is-open');
-      // animation: 0 -> scrollHeight
+      // animación: 0 -> scrollHeight
       content.style.maxHeight = content.scrollHeight + 'px';
     } else {
-      // animation: scrollHeight -> 0
+      // animación: scrollHeight -> 0
       d.classList.remove('is-open');
       content.style.maxHeight = content.scrollHeight + 'px';
       requestAnimationFrame(() => {
@@ -891,7 +820,7 @@
     const summary = d.querySelector('summary');
     const content = getContent(d);
 
-    // initial state
+    // estado inicial
     d.classList.toggle('is-open', d.open);
     if (content) content.style.maxHeight = d.open ? (content.scrollHeight + 'px') : '0px';
 
@@ -903,7 +832,7 @@
     });
   });
 
-  // Recalculate heights on rotate / resize
+  // Recompute heights on rotate / resize
   window.addEventListener('resize', () => {
     panels.forEach(d => {
       if (!d.open) return;
@@ -912,27 +841,32 @@
     });
   });
 
-  // Jump + open Cheatsheet (big button + FAB)
-  function openCheatsheet(){
-    const cs = document.getElementById('cheatsheet');
-    if (!cs) return;
-    closeOthers(cs);
-    setExpanded(cs, true);
-    cs.scrollIntoView({ behavior: smoothBehavior, block: 'start' });
-    history.replaceState(null, '', '#cheatsheet');
+  // Jump + open a panel by its id (the big buttons on top and the FAB)
+  const JUMPS = ['cheatsheet', 'host'];
+
+  function openPanel(id){
+    const panel = document.getElementById(id);
+    if (!panel) return;
+    closeOthers(panel);
+    setExpanded(panel, true);
+    panel.scrollIntoView({ behavior: smoothBehavior, block: 'start' });
+    history.replaceState(null, '', '#' + id);
   }
 
-  document.querySelectorAll('a[href="#cheatsheet"]').forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      openCheatsheet();
+  JUMPS.forEach(id => {
+    document.querySelectorAll('a[href="#' + id + '"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPanel(id);
+      });
     });
   });
 
-  // If the page is opened with #cheatsheet in the URL, open it
-  if (location.hash === '#cheatsheet') {
+  // If you land with the hash already set, open it
+  const landing = location.hash.slice(1);
+  if (JUMPS.includes(landing)) {
     // let it paint 1 frame before computing scrollHeight
-    requestAnimationFrame(openCheatsheet);
+    requestAnimationFrame(() => openPanel(landing));
   }
 })();
 </script>
