@@ -180,7 +180,10 @@
     .top-cta{
       width:min(var(--max), calc(100% - 28px));
       margin: 10px auto 18px;
+      display:grid;
+      gap:10px;
     }
+    .cheat-cta.small{ font-size: clamp(15px, 3.8vw, 22px); padding: 12px 16px; }
     .cheat-cta{
       display:flex;
       align-items:center;
@@ -447,6 +450,7 @@
 
   <div class="top-cta">
     <a class="cheat-cta" href="#cheatsheet" aria-label="Ir a la Cheatsheet">Ir a Cheatsheet <span aria-hidden="true">🧠</span></a>
+    <a class="cheat-cta small" href="#host" aria-label="Ir al Manual del HOST">Manual del HOST <span aria-hidden="true">🎛️</span></a>
   </div>
 
     <section class="accordion" aria-label="Reglas GITSTER (acordeones)">
@@ -461,10 +465,10 @@
         <div class="panel__content">
           <div class="content-inner">
             <p class="lead">
-              <strong>GITSTER</strong> es una variación del famoso juego de ordenar canciones en orden cronológico, pero aquí las <strong>fichas</strong>
-              marcan mucho más el ritmo 🕺<br/>
-              En esta versión, las <strong>apuestas</strong> y los <strong>robos</strong> de discos no son meros featurings
-              olvidables, ¡son el artista principal! 💃
+              <strong>GITSTER</strong> es un juego basado en tu propia música y la de tu grupo de amigos 🪩<br/>
+              El objetivo del juego es colocar cada canción en el sitio correcto de tu línea temporal (<strong>Timeline</strong>) ⌛<br/>
+              Lo más importante es saber <strong>de qué época</strong> son las canciones que suenen, pero conocer sus
+              <strong>Títulos</strong> y <strong>Artistas</strong> te permitirá ganar <strong>fichas</strong> para apostar contra otros jugadores 🪙
             </p>
           </div>
         </div>
@@ -478,12 +482,11 @@
         <div class="panel__content">
           <div class="content-inner">
             <ul>
-              <li><strong>La app GITSTER</strong> en el móvil de cada jugador 📱<br/><span class="muted">Un móvil hace de <strong>HOST</strong> (pone la música y arbitra) y el resto son <strong>mandos</strong></span></li>
-              <li><strong>Spotify Premium</strong> en el móvil del HOST <span class="muted">(es el único que necesita cuenta)</span> 🎧</li>
-              <li><strong>Una playlist de Spotify por jugador</strong> (enlace público) 🎶<br/><span class="muted">De ahí salen los discos: cuanto más grandes y más variadas, mejor</span></li>
+              <li><strong>La app GITSTER</strong> en el móvil de cada jugador 📱<br/><span class="muted">Un móvil hará de <strong>HOST</strong> (pone la música y arbitra) y el resto serán los <strong>mandos</strong> de los demás jugadores</span></li>
+              <li><strong>Spotify Premium</strong> en el móvil del HOST 🎧</li>
+              <li><strong>Una playlist de Spotify por cada jugador</strong> <span class="muted">(de ahí salen las canciones del juego)</span> 🎶</li>
               <li><strong>Un altavoz</strong> (opcional pero recomendado) 🔊</li>
             </ul>
-            <p><span class="muted">Ni cartas, ni fichas, ni mazo: <strong>todo lo lleva la app</strong> 🧮</span></p>
           </div>
         </div>
       </details>
@@ -495,8 +498,8 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p>Construir tu línea temporal (<strong>Timeline</strong>) colocando discos en <strong>ORDEN CRONOLÓGICO</strong> (antes/después) ⌛</p>
-            <p>Gana el primero que llegue a <strong>6 discos</strong> —<strong>8</strong> si sois tres o menos— con <strong>2 de ventaja</strong> sobre el segundo <span class="muted">(y si nadie destaca, a los 8 o 10, respectivamente, lo decide la GRAN FINAL)</span> 🏁</p>
+            <p>Construir tu línea temporal (<strong>Timeline</strong>) colocando canciones (<strong>discos</strong>) en <strong>ORDEN CRONOLÓGICO</strong> (antes/después) ⌛</p>
+            <p>Gana el primero que llegue a <strong>6 discos</strong> —<strong>8</strong> si sois tres o menos— con <strong>2 de ventaja</strong> sobre el segundo <span class="muted">(y si nadie destaca, a los 8 o 10, respectivamente, el ganador se decide en una GRAN FINAL)</span> 🏁</p>
             <p class="muted">(El <strong>Año Exacto</strong> <strong>NO</strong> hace falta para colocar; solo sirve para <strong>ganar fichas apostando</strong>)</p>
           </div>
         </div>
@@ -511,22 +514,12 @@
           <div class="content-inner">
             <ul>
               <li>El HOST abre la <strong>sala</strong> y el resto entra desde su móvil 🛜<br/>
-                Cada uno escribe <strong>su mote</strong> y elige <strong>su playlist</strong> de la lista 📝</li>
-              <li>La app junta todas las playlists en <strong>un solo saco</strong> de discos y reparte:<br/>
-                <strong>1 disco inicial</strong> a cada Timeline <span class="muted">(de tu propia playlist siempre que pueda)</span> 💿<br/>
+                Cada uno escribe <strong>su mote</strong> y elige <strong>su playlist</strong> de la lista 📝<br/>
+                Se puede jugar en equipo: varias playlists con el <strong>MISMO mote</strong> = <strong>un solo equipo</strong> que las junta todas 🤝</li>
+              <li>La app junta todas las playlists en <strong>un solo saco</strong> de canciones y reparte
+                <strong>1 disco inicial</strong> a cada Timeline 💿
                 y <strong>3 fichas de apuesta</strong> a cada jugador 🪙🪙🪙</li>
-              <li><strong>PROPINA AL DJ</strong>: cada vez que te toca ser DJ te cae <strong>1 ficha</strong>, pero solo si llegas con <strong>menos de 3</strong> y nunca en la primera ronda 🪙 <span class="muted">Como cobrar al pasar por la casilla de salida, aunque aquí solo cobra el que anda justo ➡️</span></li>
             </ul>
-
-            <div class="callout mag" role="note" aria-label="Nota EQUIPOS en preparación">
-              <p><strong style="color: rgba(255,43,214,.95)">EQUIPOS</strong> – Varias playlists con el <strong>MISMO mote</strong> = <strong>un solo equipo</strong> que las junta todas 🤝</p>
-            </div>
-
-            <div class="callout" role="note" aria-label="Nota LÍMITE">
-              <p><strong style="color: rgba(34,211,238,.95)">LÍMITE DE FICHAS</strong><br/> <strong>¡NO&nbsp;SE&nbsp;PUEDEN ACUMULAR MÁS DE 10 FICHAS!</strong> ⚠️<br/>
-                <span class="muted">Pronto comprobaréis que en el GITSTER se obtienen fichas mucho más rápido que de costumbre, ¡así que atreveos a apostar y a dar rienda suelta a vuestra ludopatía!</span> 🤑
-              </p>
-            </div>
           </div>
         </div>
       </details>
@@ -538,8 +531,7 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p>La app le saca un disco al DJ <span class="muted">(de las playlists de la mesa; cuanto mejor va, más difícil se lo pone)</span> y lo pone a sonar en el HOST. <strong>Nadie ve título, artista ni año</strong> 🙈</p>
-            <p>El DJ le da al tocadiscos para escuchar y decide qué hacer:</p>
+            <p>La app le saca un disco al DJ y éste decide qué hacer:</p>
 
             <ul>
               <li><strong>&nbsp;JUGAR NORMAL</strong> 🎵<br/>Escuchar la canción, <strong>arrastrar el disco</strong> a su hueco de la Timeline 🕒<br/>e intentar adivinar <strong><strong>Título</strong></strong> y <strong>Artista(s)</strong> 🎵🎤</li>
@@ -550,7 +542,7 @@
             </div>
 
             <div class="callout mag" role="note" aria-label="Nota RITMO">
-              <p><strong style="color: rgba(255,43,214,.95)">RITMO</strong> – Se RECOMIENDA escuchar la canción <strong>HASTA EL ESTRIBILLO</strong> (incluido), nada de escucharla entera ⏱️</p>
+              <p><strong style="color: rgba(255,43,214,.95)">RITMO</strong> – Se RECOMIENDA escuchar la canción <strong>HASTA EL ESTRIBILLO</strong> (incluido), pero <strong>NO</strong> escucharla entera ⏱️</p>
             </div>
 
             <ul>
@@ -559,33 +551,28 @@
             </ul>
 
             <div class="callout mag" role="note" aria-label="Nota FORZAR REMIX">
-              <p><strong style="color: rgba(255,43,214,.95)">FORZAR REMIX</strong> – Mientras suena la canción (y <strong>antes</strong> de que el DJ confirme la colocación), cualquier jugador puede pagar <strong>3 fichas</strong> para obligarle a un <strong>REMIX</strong> 😈<br/><span class="muted">Solo <strong>2</strong> si el DJ va en cabeza: meterse con el que gana sale más barato 👑</span></p>
+              <p><strong style="color: rgba(255,43,214,.95)">FORZAR REMIX</strong> – Mientras suena la canción (y <strong>antes</strong> de que el DJ confirme la colocación), cualquier jugador puede pagar <strong>3 fichas</strong> para obligarle a un <strong>REMIX</strong> 😈</p>
             </div>
 
             <ul>
               <li><strong>&nbsp;COMPRAR EL DISCO</strong> 💸<br/>Pagando <strong>5 fichas</strong>, el DJ se salta el turno y el disco se coloca automáticamente en su sitio correcto de la Timeline 🧐</li>
-              <p>En ese turno, <strong>NO HABRÁ</strong><br/><strong>RONDA DE APUESTAS</strong> 🚫<br/><span class="muted">y el DJ tampoco cobra por Título/Artista</span></p>
+              <p>En ese turno, <strong>NO HABRÁ</strong><br/><strong>RONDA DE APUESTAS</strong> 🚫<br/><span class="muted">y el DJ tampoco cobrará por Título o Artista</span></p>
             </ul>
 
             <div class="callout" role="note" aria-label="Nota LEY DE LA VENTAJA">
-              <p><strong style="color: rgba(34,211,238,.95)">LEY DE LA VENTAJA I</strong> – El (o los) jugadores que tenga(n) más discos <strong>NO PUEDE(N) COMPRAR</strong> (pero sí hacer <strong>REMIX</strong>) ⚖️<br/><span class="muted">Excepción: si TODOS vais empatados (la primera ronda) no hay ventaja que capar, así que sí se permite</span></p>
-              <p>Y nadie, vaya como vaya, puede <strong>comprar el disco que le da la victoria</strong>: ese hay que jugárselo 🚫</p>
-            </div>
-
-            <div class="callout lime" role="note" aria-label="Nota EMPUJÓN AL QUE VA PERDIENDO">
-              <p><strong style="color: rgba(163,230,53,.95)">EMPUJÓN AL QUE VA PERDIENDO</strong> – La otra mitad de la Ley de la Ventaja. Si el primero te saca <strong>2 discos o más</strong>, el <strong>REMIX</strong> te sale <strong>1 ficha más barato</strong> —o sea que el primero de cada turno te sale <strong>GRATIS</strong>— y <strong>COMPRAR</strong> te cuesta <strong>3</strong> en vez de 5 🫱</p>
-              <p><span class="muted">No hace falta ir el último: se mide contra el <strong>primero</strong>, así que en un 8-5-2-2 cobran descuento los tres de abajo, el de 5 incluido. Tener gente por detrás no consuela cuando el que va ganando está a tres discos</span></p>
+              <p><strong style="color: rgba(34,211,238,.95)">LEY DE LA VENTAJA I</strong> – El jugador que tenga más discos <strong>NO PUEDE COMPRAR</strong> salvo que <strong>TODOS</strong> vayáis empatados; pero sí puede hacer <strong>REMIX</strong> ⚖️</p>
+              <p>Además, nadie, vaya como vaya, puede <strong>comprar el disco que le da la victoria</strong>: ese hay que jugárselo 🚫</p>
             </div>
 
             <div class="callout mag" role="note" aria-label="Nota ROBAR EL DISCO">
-              <p><strong style="color: rgba(255,43,214,.95)">ROBAR EL DISCO</strong> 🦹 – Mientras suena la canción (y <strong>antes</strong> de que se cierre la escucha), cualquier jugador que NO tenga el disco puede pagar <strong>9 fichas</strong> <span class="muted">(solo <strong>7</strong> si a quien se lo quitas va en cabeza 👑)</span> para <strong>quitárselo al DJ</strong> y jugársela a colocarlo <strong>en SU propia Timeline</strong>.</p>
+              <p><strong style="color: rgba(255,43,214,.95)">ROBAR EL DISCO</strong> 🦹 – Mientras suena la canción (y <strong>antes</strong> de que se cierre la escucha), cualquier jugador que NO tenga el disco puede pagar <strong>9 fichas</strong> para <strong>quitárselo al DJ</strong> y jugársela a colocarlo <strong>en SU propia Timeline</strong></p>
               <ul>
-                <li>Al ladrón <strong>no</strong> se le puede forzar REMIX, pero sí se le puede <strong>re-robar</strong> el disco antes de que cierre su colocación (encadenando robos). Cada robo cuesta otras 9 fichas 🔁</li>
-                <li>El <strong>DJ robado NO pierde el turno de adivinar</strong>: sigue puntuando título y artista igual, aunque le hayan robado 😤</li>
-                <li>Y <strong>el ladrón también apuesta</strong>: con las fichas que le queden va a <strong>Título</strong>, <strong>Artista(s)</strong>, <strong>Álbum</strong> y <strong>Año Exacto</strong> como todo el mundo 🎰<br/><span class="muted">Lo único que no puede es <strong>Orden Cronológico</strong>, que es el hueco que acaba de colocar él</span></li>
-                <li>Además, el DJ (y cualquiera al que le robaran el disco en la cadena) puede apostar a <strong>Orden Cronológico GRATIS</strong> contra la colocación del ladrón, por si se equivoca. El DJ original tiene <strong>prioridad</strong> para recuperar el disco (aunque pulse más tarde) 🕒</li>
+                <li>Al ladrón <strong>no</strong> se le puede forzar REMIX, pero sí se le puede <strong>re-robar</strong> el disco antes de que cierre su colocación (encadenando robos) 🔁</li>
+                <li>El <strong>DJ robado NO pierde el turno de adivinar</strong>: sigue pudiendo ganar fichas por adivinar <strong>Título</strong> y <strong>Artista</strong> aunque le hayan robado 😤</li>
               </ul>
             </div>
+
+            <p><strong>PROPINA AL DJ</strong>: cada vez que te toque ser DJ y tengas <strong>menos de 3 fichas</strong>, te regalamos una adicional <del>por pasar por la casilla de salida</del></p>
           </div>
         </div>
       </details>
@@ -597,37 +584,33 @@
         </summary>
         <div class="panel__content">
           <div class="content-inner">
-            <p><span class="muted">¡Se acabó el pelearse por quién ha dicho GITSTER primero, quién ha gritado más, quién se pone de portero porque el balón es suyo y si no le dejamos se vuelve a su casa y se lo lleva y blah, blah, blah!</span></p>
-            <p><span class="muted">Aquí somos <del>adictos al juego</del> jugadores civilizados y, como tales, dejamos que arbitre la app</span> 🫡</p>
+            <p>En cuanto el DJ coloque su disco, el HOST abrirá las apuestas, ¡así que hay que estar atentos y tener <strong>reflejos</strong>! 🏁</p>
 
-            <p>En cuanto el DJ coloca su disco, el HOST abre las apuestas y esto es una <strong>CARRERA</strong> 🏁</p>
-            <p><strong>Nadie tiene la categoría en exclusiva</strong>: se apuesta a lo que se quiera, pero el <strong>orden en que pulsáis</strong> es el orden en que os toca contestar. No hay turnos, no hay sentido antihorario, hay <strong>reflejos</strong> 🤜</p>
-
+            <p>Se puede apostar a una o a cualquier número de las siguientes categorías:</p>
             <ul>
-              <li><strong>APOSTAR</strong> a <strong>TODAS</strong> las categorías que quieras:<br/><strong>Título</strong>, <strong>Artista(s)</strong>, <strong>Álbum</strong> o <strong>Año Exacto</strong> (<strong>1 ficha</strong> cada una)<br/>u <strong>Orden Cronológico</strong> (<strong>2 fichas</strong>: llevarse un disco no puede ser tan barato como ganar una ficha) 🕒🎵🎤💿📆<br/><span class="muted">Orden Cronológico es apostar a que el DJ FALLA: eliges TÚ el hueco que crees correcto (y tiene que ser distinto al del DJ)</span><br/><span class="muted">Las fichas <strong>se ponen sobre la mesa al pulsar</strong>, no al final: por eso, cuando ya no te llegan, los botones se te apagan solos</span></li>
-              <li><strong>PASAR</strong> 🤷‍♀️</li>
+              <li><strong>Orden Cronológico</strong> 🕒<br/>Cuesta <strong>2 fichas</strong> y es apostar a que el DJ <strong>HA FALLADO</strong> al colocar el disco en su Timeline: te permite elegir <strong>TÚ</strong> el hueco que crees correcto</li>
+              <li><strong>Título</strong> 🎵<br/>Te juegas una ficha (<strong>doble o nada</strong>) a que te sabes el título de la canción</li>
+              <li><strong>Artista(s)</strong> 🎤<br/>Lo mismo para el artista de la canción, aunque si te sabes un <strong>featuring</strong> tienes la posibilidad de ganar <strong>2 fichas</strong> (triple o nada baby). Eso sí, si te la juegas a decir artistas secundarios y fallas al menos uno, pierdes la ficha que has apostado</li>
+              <li><strong>Álbum</strong> 💿<br/>Te juegas una ficha (<strong>doble o nada</strong>) a que te sabes el álbum de la canción</li>
+              <li><strong>Año</strong> 📆<br/>Te juegas una ficha (<strong>triple o nada</strong>) a que te sabes el año exacto de la canción</li>
+              <li>También puedes <strong>PASAR</strong> y no apostar a nada 🤷‍♀️</li>
             </ul>
+            <p>Evidentemente, todas las apuestas tienen que ser distintas a lo que haya dicho el DJ o un jugador que haya apostado antes que tú</p>
+            <p>Puedes <strong>cambiar de idea</strong> mientras la ronda de apuestas siga abierta volviendo a pulsar el botón de la apuesta de la que te arrepientas 🔄</p>
 
-            <p>Puedes <strong>cambiar de idea</strong> mientras la ronda siga abierta: <strong>tocar otra vez tu categoría te saca de la cola</strong>, pero si la vuelves a pulsar entras <strong>el último</strong> 🔄</p>
-
-            <div class="callout mag" role="note" aria-label="Nota LA COLA">
-              <p><strong style="color: rgba(255,43,214,.95)">LA COLA</strong> – En cada categoría se pregunta <strong>por orden de pulsación</strong>. El primero contesta; si <strong>acierta</strong>, cobra y <strong>a los de detrás se les devuelve su ficha</strong> sin llegar a contestar 😌; si <strong>falla</strong>, su ficha se pierde y le toca al siguiente 🎤</p>
-              <p>Por eso apuntarse el último <strong>no es tirar una ficha</strong>: la mayoría de las veces no llegas a contestar y la recuperas entera. Lo que se paga es <strong>fallar</strong>, no <strong>apostar</strong> ☝️</p>
-              <p><strong>25 segundos</strong> para decidir ⏱️ Al que no haya apostado ni pasado cuando el reloj llegue a cero, <strong>se le pasa turno solo</strong> <span class="muted">(con aviso en el móvil cuando quedan 5)</span> 😬</p>
+            <div class="callout mag" role="note" aria-label="Nota ORDEN DE APUESTAS">
+              <p><strong style="color: rgba(255,43,214,.95)">ORDEN DE APUESTAS</strong> – Varios jugadores pueden apostar a la <strong>misma categoría</strong> y tendrán oportunidad de adivinar <strong>en el orden en el que hayan pulsado</strong> el botón de apuesta, ¡así que la velocidad es clave! 🏁</p>
+              <p>Si alguien te quita la apuesta porque adivinó antes que tú <span class="muted">(ej.: «jo, ese título lo iba a decir yo»)</span>, el HOST se encargará de <strong>devolverte la ficha</strong> que hayas apostado 😌</p>
             </div>
 
-            <div class="callout" role="note" aria-label="Nota VARIOUS ARTISTS">
-              <p><strong style="color: rgba(34,211,238,.95)">VARIOUS ARTISTS</strong> – A la hora de apostar a <strong>Artista(s)</strong>, se puede nombrar a uno o a varios 🖕; pero si nombras a varios <strong>Y FALLAS AL MENOS UNO, PIERDES LA APUESTA</strong> ☠️</p>
-              <p><span class="muted">Acertar el principal paga <strong>+1</strong>; acertar un <strong>feat</strong> o invitado paga <strong>+2</strong> (que tiene más mérito)</span></p>
+            <div class="callout" role="note" aria-label="Nota LÍMITE">
+              <p><strong style="color: rgba(34,211,238,.95)">LÍMITE DE FICHAS</strong> – <strong>¡NO&nbsp;SE&nbsp;PUEDEN ACUMULAR MÁS DE 10 FICHAS!</strong> ⚠️<br/>
+                <span class="muted">Al llegar al tope, la app avisa: «😱 TOPE 10/10 · las fichas que fueses a ganar se PIERDEN 😤 · ¡Fuerza remix, roba o compra discos! 🔥»</span></p>
+              <p>Lo que se paga es <strong>fallar</strong>, no <strong>apostar</strong> ☝️</p>
             </div>
 
             <div class="callout mag" role="note" aria-label="Nota LEY DE LA VENTAJA II, ahora es personal">
-              <p><strong style="color: rgba(255,43,214,.95)">LEY DE LA VENTAJA II, ahora es personal</strong> – El (o los) jugadores que tenga(n) más discos <strong>TAMPOCO PUEDE(N) APOSTAR A ORDEN CRONOLÓGICO</strong> ⚖️<br/><span class="muted">Misma excepción: si TODOS vais empatados, se permite</span></p>
-            </div>
-
-            <div class="callout violet" role="note" aria-label="Nota DECIRLO EN VOZ ALTA">
-              <p><strong style="color: rgba(167,139,250,.95)">¡EN VOZ ALTA!</strong> – Reclamar la categoría en el móvil <strong>no es apostar</strong>: hay que <strong>decir tu respuesta</strong> antes de revelar el disco 🗣️<br/><span class="muted">Título, Artista, Álbum y Año se cantan y los juzga el HOST, categoría por categoría y por orden de cola. Por eso las apuestas las cierra el HOST, cuando todo el mundo ha cantado lo suyo</span></p>
-              <p>El <strong>hueco del Orden Cronológico se señala DESPUÉS de cerrar</strong>, no al pulsarlo 🕒<br/><span class="muted">Y también por orden de cola, de uno en uno y a la vista de todos: el segundo coloca sabiendo dónde puso el primero, y ningún hueco se puede repetir. Si te lo han quitado, te retiras sin pagar nada</span></p>
+              <p><strong style="color: rgba(255,43,214,.95)">LEY DE LA VENTAJA II, ahora es personal</strong> – Los jugadores que vayan en cabeza (tengan más discos) <strong>TAMPOCO PUEDEN APOSTAR A ORDEN CRONOLÓGICO</strong>, salvo que todos vayáis empatados ⚖️</p>
             </div>
 
           </div>
@@ -758,6 +741,54 @@
         </div>
       </details>
 
+
+      <details id="host" class="panel featured">
+        <summary aria-label="Abrir sección MANUAL DEL HOST">
+          <span class="sum-title"><span class="kicker">MANUAL DEL HOST 🎛️</span></span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="panel__content">
+          <div class="content-inner">
+            <p>El HOST no solo pone la música: <strong>es el árbitro</strong>. Esto es lo que solo puede hacer él 🫡</p>
+
+            <ul>
+              <li><strong>La música la maneja el DJ desde su móvil</strong> 🎧<br/><span class="muted">Play, pausa, ⏮ Replay y +10s salen en el mando del DJ, pero suenan en el HOST. El host no toca nada durante la escucha</span></li>
+              <li><strong>⭐ El que se va a Spotify</strong> 🕵️<br/>Cuando alguien abre la canción en Spotify desde su móvil, su nombre aparece <strong>en ámbar</strong> junto al logo de Spotify en la pantalla del HOST, mientras siga sonando esa canción<br/><span class="muted">Ha visto el título, el artista y el año: <strong>no debería cobrar apuestas de esa ronda</strong>. La app no se lo impide, solo lo canta: el que juzga es el host</span></li>
+              <li><strong>Cerrar apuestas 🔒</strong><br/>Cuando todo el mundo ha apostado o pasado. Después se señalan los huecos del <strong>Orden Cronológico</strong>, de uno en uno y por orden de cola 🕒</li>
+              <li><strong>🎤 Que canten, por orden</strong><br/>La pantalla lista cada categoría con su cola. Se pregunta <strong>de uno en uno y en ese orden</strong>: en cuanto uno acierta, los de detrás ni contestan ni pagan</li>
+              <li><strong>Ya han respondido: revelar 🎞️</strong><br/>Ahí se destapa el disco y se abre el pago de apuestas 💰</li>
+            </ul>
+
+            <div class="callout" role="note" aria-label="Nota LOS BOTONES DE PAGO">
+              <p><strong style="color: rgba(34,211,238,.95)">LOS BOTONES DE PAGO</strong> – El revelado tiene <strong>dos páginas</strong>, se pasa con las flechas ← → 💰</p>
+              <p><strong>Página 1, el DJ.</strong> <strong>Título</strong>: ✗ o <strong>✓ (+1 🪙)</strong>. <strong>Artista</strong>: se va tocando y cicla ✗ → <strong>✓ Principal (+1 🪙)</strong> → <strong>✓ Featuring (+2 🪙)</strong><br/><span class="muted">Aquí no hay rojo: el DJ que falla no paga nada</span></p>
+              <p><strong>Página 2, los apostantes</strong>, agrupados por categoría y numerados por orden de cola. Cada botón cicla:</p>
+              <ul>
+                <li><strong>0 🪙</strong> – no llegó a contestar porque alguien de delante acertó: ni cobra ni paga <span class="muted">(recupera su ficha)</span></li>
+                <li><strong>✗ -1 🪙</strong> – contestó y falló: pierde la ficha</li>
+                <li><strong>✓ +N 🪙</strong> – acertó y cobra</li>
+                <li><strong>✓ Featuring +2 🪙</strong> – solo en Artista, cuando se moja con los secundarios y acierta</li>
+              </ul>
+              <p><span class="muted">Verde lo que cobra, rojo lo que paga, apagado lo que no mueve nada</span> 🚦</p>
+            </div>
+
+            <div class="callout lime" role="note" aria-label="Nota EL AÑO">
+              <p><strong style="color: rgba(163,230,53,.95)">CORREGIR EL AÑO</strong> ✏️ – En el revelado hay un campo <strong>«Año (corrígelo si está mal)»</strong>. Spotify se equivoca a menudo con las reediciones y los recopilatorios, y <strong>la curación de los años es del host</strong> 🧐</p>
+              <p>Lo que teclees ahí <strong>manda sobre lo que dice Spotify</strong> y se guarda para las <strong>siguientes</strong> partidas. La ronda que se acaba de jugar no se recalcula <span class="muted">(en los minijuegos el botón se llama «✏️ corregir el año» y sale bajo la canción revelada)</span></p>
+            </div>
+
+            <ul>
+              <li><strong>Resolver turno</strong> paga todo lo marcado y <strong>Siguiente turno ▶</strong> pasa al siguiente DJ</li>
+              <li><strong>⬅ Atrás (corregir apuestas)</strong> deshace la resolución si te has equivocado juzgando, <strong>mientras no hayas pasado de turno</strong> ↩️</li>
+              <li><strong>🔄 Reiniciar</strong> descarta el turno entero y devuelve al DJ a su decisión con una canción nueva <span class="muted">(para cuando el turno se lía de verdad)</span></li>
+            </ul>
+
+            <div class="callout amber" role="note" aria-label="Nota EN LA GRAN FINAL">
+              <p><strong style="color: rgba(245,158,11,.95)">EN LA GRAN FINAL</strong> 🕺 – El reloj de los 50 segundos lo lleva el HOST; los mandos solo lo pintan. Si alguien se está durmiendo, <strong>📳 Avisar jugadores</strong> le hace vibrar el móvil, y <strong>🔇 Parar la música</strong> corta el temazo del duelo 🔊</p>
+            </div>
+          </div>
+        </div>
+      </details>
 
       <details class="panel" id="fuck">
         <summary aria-label="Abrir sección FUCK (Frequently Usked CKuestions)">
